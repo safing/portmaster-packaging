@@ -1,0 +1,5 @@
+portmaster (0.0.0-1) bionic; urgency=medium
+
+  * Packaging with dpkg-buildpackage. Version number is currently not updated
+
+ -- Safing <noc@safing.io>  Wed, 03 Jul 2019 17:07:21 +0200

@@ -1,0 +1,1 @@
+call signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 %*

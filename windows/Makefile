@@ -1,0 +1,25 @@
+all: portmaster-uninstaller.exe portmaster-installer.exe
+
+portmaster-control.exe:
+	wget https://updates.safing.io/latest/windows_amd64/control/portmaster-control.exe
+
+portmaster-uninstaller.exe: portmaster-installer.nsi install_summary.nsh
+	makensis -DUNINSTALLER portmaster-installer.nsi
+	sudo docker run --rm -it -v $(shell pwd):/mnt jamesnetherton/wine /mnt/uninstaller_pkg.exe #uninstaller_installer.exe is executed just to extract its containing uninstall.exe ... unnecessary complicated
+	sudo chown $(shell id -u)":"$(shell id -g) portmaster-uninstaller.exe uninstaller_pkg.exe
+	#TODO: sign
+
+install_summary.nsh:
+	echo -n '$${NSD_SetText} $$0 "' > install_summary.nsh
+	perl -p -e 's/\r?\n/\$$\\r\$$\\n/' install_summary.rtf >> install_summary.nsh
+	echo '"' >> install_summary.nsh
+
+portmaster-installer.exe: portmaster-control.exe portmaster-installer.nsi portmaster-uninstaller.exe install_summary.nsh
+	makensis -DINSTALLER -DPRODUCTION portmaster-installer.nsi #Production enables good compression (takes longer)
+	#TODO: sign
+clean:
+	rm -f portmaster-uninstaller.exe
+	rm -f uninstaller_pkg.exe
+	rm -f portmaster-installer.exe
+	rm -f install_summary.nsh
+	rm -rf portmaster-control.exe

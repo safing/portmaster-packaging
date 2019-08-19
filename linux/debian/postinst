@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule #just to make lintian happy and maybe prevent some sort of error ...
+
+#DEBHELPER#

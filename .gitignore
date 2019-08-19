@@ -1,0 +1,13 @@
+*.deb
+/portmaster_*.*
+/linux/portmaster-control
+/linux/debian/files
+/linux/debian/*.log
+/linux/debian/*.substvars
+/linux/debian/*.debhelper
+/linux/debian/portmaster/
+/windows/portmaster-control.exe
+/windows/portmaster-installer.exe
+/windows/portmaster-uninstaller.exe
+/windows/uninstaller_pkg.exe
+/windows/install_summary.nsh

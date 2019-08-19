@@ -1,0 +1,10 @@
+[Unit]
+Description=Portmaster Application Firewall
+
+[Service]
+ExecStart=/usr/bin/portmaster-control run core --data=/var/lib/portmaster/
+ExecStopPost=/bin/sh -c "/sbin/iptables -F C17 || /bin/true; /sbin/iptables -t mangle -F C170 || /bin/true; /sbin/iptables -t mangle -F 171 || /bin/true;"
+#shouldn't be required ... for very unclean stops like kill -9
+
+[Install]
+WantedBy=multi-user.target

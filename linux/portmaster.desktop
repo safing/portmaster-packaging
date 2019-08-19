@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Portmaster
+GenericName=Application Firewall
+Exec=portmaster-control run app --data=/var/lib/portmaster
+Icon=/usr/share/pixmaps/portmaster.png
+Terminal=false
+Type=Application
+Categories=System

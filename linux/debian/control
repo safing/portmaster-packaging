@@ -1,0 +1,16 @@
+Source: portmaster
+Section: net
+Priority: optional
+Maintainer: Safing <noc@safing.io>
+Build-Depends: debhelper (>= 9)
+Homepage: https://safing.io/
+
+Package: portmaster
+Architecture: amd64
+Pre-Depends: ${misc:Depends}
+Depends: libnetfilter-queue1, libc6, ${shlibs:Depends}
+Recommends: gir1.2-harfbuzz-0.0
+Description: Application Firewall
+ The Portmaster enables you to protect your data on your device. You
+ are back in charge of your outgoing connections: you choose what data
+ you share and what data stays private. Read more on docs.safing.io.
