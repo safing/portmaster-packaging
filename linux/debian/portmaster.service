@@ -1,10 +1,53 @@
 [Unit]
-Description=Portmaster Application Firewall
+Description=Portmaster Privacy App
+Documentation=https://safing.io
+Documentation=https://github.com/safing/portmaster/wiki
+Before=nss-lookup.target network.target shutdown.target
+After=systemd-networkd.service
+Conflicts=shutdown.target
+Wants=nss-lookup.target
+
+# The Portmaster will conflict with almost all DNS services that
+# that are listening on 53/upd or 53/tcp. Only DNS services that
+# are likely to be running on desktop systems are listed here so
+# systemd can gracefully stop them when portmaster is started.
+# Note that manually starting one of the below services will instruct
+# systemd to request portmaster to stop.
+Conflicts=systemd-resolved.service dnsmasq.service unbound.service nextdns.service
 
 [Service]
-ExecStart=/usr/bin/portmaster-control run core --data=/var/lib/portmaster/
-ExecStopPost=/bin/sh -c "/sbin/iptables -F C17 || /bin/true; /sbin/iptables -t mangle -F C170 || /bin/true; /sbin/iptables -t mangle -F 171 || /bin/true;"
-#shouldn't be required ... for very unclean stops like kill -9
+Type=simple
+Restart=always
+RestartSec=10
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+NoNewPrivileges=yes
+PrivateTmp=yes
+PIDFile=/var/lib/portmaster/core-lock.pid
+Environment=LOGLEVEL=info
+Environment=PORTMASTER_ARGS=
+EnvironmentFile=-/etc/default/portmaster
+ProtectSystem=strict
+ReadWritePaths=/var/lib/portmaster
+# Portmaster calls iptables which requires to set xtables.lock
+ReadWritePaths=/run/xtables.lock
+RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET AF_INET6
+RestrictNamespaces=yes
+RestrictSUIDSGID=yes
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+PrivateDevices=yes
+AmbientCapabilities=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_net_broadcast cap_net_raw cap_sys_module cap_sys_ptrace cap_dac_override
+CapabilityBoundingSet=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_net_broadcast cap_net_raw cap_sys_module cap_sys_ptrace cap_dac_override
+SystemCallArchitectures=native
+SystemCallFilter=@system-service @module
+SystemCallErrorNumber=EPERM
+ExecStart=/var/lib/portmaster/portmaster-start --data /var/lib/portmaster core -- --log $LOGLEVEL $PORTMASTER_ARGS
+ExecStopPost=-/sbin/iptables -F C17
+ExecStopPost=-/sbin/iptables -t mangle -F C170
+ExecStopPost=-/sbin/iptables -t mangle -F 171
 
 [Install]
 WantedBy=multi-user.target
