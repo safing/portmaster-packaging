@@ -1,12 +1,19 @@
+WINE := $(shell command -v wine 2> /dev/null)
+
 all: portmaster-uninstaller.exe portmaster-installer.exe
 
 portmaster-control.exe:
-	wget https://updates.safing.io/latest/windows_amd64/control/portmaster-control.exe
+	curl -o portmaster-control.exe https://updates.safing.io/latest/windows_amd64/control/portmaster-control.exe
 
 portmaster-uninstaller.exe: portmaster-installer.nsi install_summary.nsh
 	makensis -DUNINSTALLER portmaster-installer.nsi
-	sudo docker run --rm -it -v $(shell pwd):/mnt jamesnetherton/wine /mnt/uninstaller_pkg.exe #uninstaller_installer.exe is executed just to extract its containing uninstall.exe ... unnecessary complicated
-	sudo chown $(shell id -u)":"$(shell id -g) portmaster-uninstaller.exe uninstaller_pkg.exe
+ifndef WINE
+		sudo docker run --rm -it -v $(shell pwd):/mnt jamesnetherton/wine /mnt/uninstaller_pkg.exe
+		sudo chown $(shell id -u)":"$(shell id -g) portmaster-uninstaller.exe uninstaller_pkg.exe
+else
+		# CI support, we have wine available
+		WINEPREFIX=/tmp wine ./uninstaller_pkg.exe
+endif
 	#TODO: sign
 
 install_summary.nsh:
@@ -17,6 +24,7 @@ install_summary.nsh:
 portmaster-installer.exe: portmaster-control.exe portmaster-installer.nsi portmaster-uninstaller.exe install_summary.nsh
 	makensis -DINSTALLER -DPRODUCTION portmaster-installer.nsi #Production enables good compression (takes longer)
 	#TODO: sign
+
 clean:
 	rm -f portmaster-uninstaller.exe
 	rm -f uninstaller_pkg.exe
