@@ -1,5 +1,13 @@
-portmaster (0.0.0-1) bionic; urgency=medium
+portmaster (0.0.0.2) buster; urgency=medium
+
+  * Updated systemd service file
+  * Migrate from portmaster-control to portmaster-start
+
+ -- Safing <noc@safing.io>  Tue, 21 Jul 2020 14:27:12 +0200
+
+portmaster (0.0.0.1) bionic; urgency=medium
 
   * Packaging with dpkg-buildpackage. Version number is currently not updated
 
  -- Safing <noc@safing.io>  Wed, 03 Jul 2019 17:07:21 +0200
+

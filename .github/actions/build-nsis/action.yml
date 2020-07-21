@@ -1,0 +1,13 @@
+name: 'Build Windows NSIS installer'
+description: 'Build a Windows installer using NSIS'
+outputs:
+  filename:
+    description: 'Name of the built `.exe` file'
+
+runs:
+  using: docker
+  image: Dockerfile
+
+branding:
+  icon: package
+  color: gray-dark
