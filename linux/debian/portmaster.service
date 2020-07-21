@@ -1,7 +1,7 @@
 [Unit]
-Description=Portmaster Privacy App
+Description=Portmaster by Safing
 Documentation=https://safing.io
-Documentation=https://github.com/safing/portmaster/wiki
+Documentation=https://docs.safing.io
 Before=nss-lookup.target network.target shutdown.target
 After=systemd-networkd.service
 Conflicts=shutdown.target
@@ -34,7 +34,9 @@ ReadWritePaths=/run/xtables.lock
 RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET AF_INET6
 RestrictNamespaces=yes
 RestrictSUIDSGID=yes
-ProtectHome=yes
+# In future version portmaster will require access to user home
+# directories to verify application permissions.
+ProtectHome=read-only
 ProtectKernelTunables=yes
 ProtectKernelLogs=yes
 ProtectControlGroups=yes
