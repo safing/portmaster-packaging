@@ -1,4 +1,4 @@
-name: Linux (.DEB)
+name: Debian / Ubuntu
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
           path: ${{ steps.build.outputs.filename }}
 
   install-ubuntu:
-    name: "${{ matrix.container }}"
+    name: ${{ matrix.container }}
     runs-on: ubuntu-latest
     needs: build-deb
     container: ${{ matrix.container }}
@@ -32,7 +32,7 @@ jobs:
         container:
           - "ubuntu:latest"
           - "ubuntu:18.04"
-          - "ubuntu:19.04"
+          #- "ubuntu:19.04" # apt update fails
           - "ubuntu:20.04"
     steps:
       - uses: actions/checkout@v2
@@ -42,13 +42,16 @@ jobs:
           name: portmaster.deb
       
       - name: Display working directory
-        run: ls -lah
+        run: ls -lah portmaster.deb
 
       - name: Update package index
-        run: apt update
+        run: apt update 
+
+      - name: Install CAs
+        run: apt install -y --no-install-recommends ca-certificates
 
       - name: Install libnetfilter-queue1
         run: apt install -y --no-install-recommends libnetfilter-queue1
 
       - name: Install Portmaster
-        run: dpkg -i ./portmaster.deb
+        run: bash -c "set -e ; dpkg -i ./portmaster.deb/*.deb"

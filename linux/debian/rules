@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-STARTURL ?= https://updates.safing.io/latest/linux_amd64/control/portmaster-start\?installer-build
+STARTURL ?= https://updates.safing.io/latest/linux_amd64/start/portmaster-start\?CI
 
 # We don't build here, we download the built binaries
 build:	portmaster-start

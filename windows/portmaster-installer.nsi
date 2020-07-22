@@ -76,7 +76,7 @@ Function .onInit
 	StrCpy $DataPath "$0\Safing\Portmaster"
 	StrCpy $DataPath_parent "$0\Safing"
 FunctionEnd
-emc
+
 Function un.onInit
 	ReadEnvStr $0 PROGRAMDATA
 	StrCpy $DataPath "$0\Safing\Portmaster"

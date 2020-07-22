@@ -1,5 +1,5 @@
 WINE := $(shell command -v wine 2> /dev/null)
-STARTURL ?= https://updates.safing.io/latest/windows_amd64/control/portmaster-start.exe\?installer-build
+STARTURL ?= https://updates.safing.io/latest/windows_amd64/start/portmaster-start.exe\?CI
 
 all: portmaster-uninstaller.exe portmaster-installer.exe
 
