@@ -76,7 +76,7 @@ Function .onInit
 	StrCpy $DataPath "$0\Safing\Portmaster"
 	StrCpy $DataPath_parent "$0\Safing"
 FunctionEnd
-
+emc
 Function un.onInit
 	ReadEnvStr $0 PROGRAMDATA
 	StrCpy $DataPath "$0\Safing\Portmaster"
@@ -128,23 +128,25 @@ noupdate:
 	WriteRegStr HKLM "SOFTWARE\Classes\CLSID\{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}\LocalServer32" "" '"$INSTDIR\${ExeName}" notifier-snoretoast'
 
 ; download
+	DetailPrint "Downloading portmaster updates, this may take a while ..."
 	nsExec::ExecToStack '$INSTDIR\${ExeName} update --data=$DataPath'
 	pop $0
 	pop $1
-	DetailPrint $1
+	; DetailPrint $1 ; # would print > BOF from portmaster-start log
 	${If} $0 <> 0
-		MessageBox MB_ICONEXCLAMATION "Failed to download Portmaster assets."
+		MessageBox MB_ICONEXCLAMATION "Failed to download Portmaster updates."
 		SetErrors
 		Abort
 	${EndIf}
 
 ; register Service
+	DetailPrint "Installing Portmaster as a Windows Service ..."
 	nsExec::ExecToStack '$INSTDIR\${ExeName} install core-service --data=$DataPath'
 	pop $0
 	pop $1
 	DetailPrint $1
 	${If} $0 <> 0
-		MessageBox MB_ICONEXCLAMATION "Windows Service registration was unsuccessfull, see details."
+		MessageBox MB_ICONEXCLAMATION "Windows Service registration failed, see details."
 		SetErrors
 		Abort
 	${EndIf}
