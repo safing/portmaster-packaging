@@ -2,4 +2,33 @@
 
 . /usr/share/debconf/confmodule #just to make lintian happy and maybe prevent some sort of error ...
 
+chmod a+x /var/lib/portmaster/portmaster-start
+
+log() {
+    echo "\e[1mportmaster: \e[0m $@"
+}
+
+print_dl_help() {
+    log ""
+    log "\e[33;1mWARN: $1\e[0m"
+    log "downloading assets can be initiated by starting the Portmaster service or by running:"
+    log "/var/lib/portmaster/portmaster-start --data=/var/lib/portmaster update"
+    log ""
+}
+
+if [ -z "${PM_SKIP_DOWNLOAD}" ]; then
+    log "downloading assets, this may take a while"
+    /var/lib/portmaster/portmaster-start --data=/var/lib/portmaster update || \
+        (
+            print_dl_help "Downloading assets failed!"
+            log "installation successfull"
+        )
+else
+    print_dl_help "skipped downloading assets!"
+fi
+
+# with 0.4.0 portmaster-control has ben renamed to portmaster-start
+# and is not placed into /usr/bin anymore.
+rm /usr/bin/portmaster-control 2> /dev/null || true
+
 #DEBHELPER#

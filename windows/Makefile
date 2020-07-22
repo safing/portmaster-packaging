@@ -1,9 +1,10 @@
 WINE := $(shell command -v wine 2> /dev/null)
+STARTURL ?= https://updates.safing.io/latest/windows_amd64/control/portmaster-start.exe\?installer-build
 
 all: portmaster-uninstaller.exe portmaster-installer.exe
 
-portmaster-control.exe:
-	curl -o portmaster-control.exe https://updates.safing.io/latest/windows_amd64/control/portmaster-control.exe\?installer-build
+portmaster-start.exe:
+	curl --fail -o portmaster-start.exe $(STARTURL)
 
 portmaster-uninstaller.exe: portmaster-installer.nsi install_summary.nsh
 	makensis -DUNINSTALLER portmaster-installer.nsi
@@ -21,7 +22,7 @@ install_summary.nsh:
 	perl -p -e 's/\r?\n/\$$\\r\$$\\n/' install_summary.rtf >> install_summary.nsh
 	echo '"' >> install_summary.nsh
 
-portmaster-installer.exe: portmaster-control.exe portmaster-installer.nsi portmaster-uninstaller.exe install_summary.nsh
+portmaster-installer.exe: portmaster-start.exe portmaster-installer.nsi portmaster-uninstaller.exe install_summary.nsh
 	makensis -DINSTALLER -DPRODUCTION portmaster-installer.nsi #Production enables good compression (takes longer)
 	#TODO: sign
 
@@ -30,4 +31,4 @@ clean:
 	rm -f uninstaller_pkg.exe
 	rm -f portmaster-installer.exe
 	rm -f install_summary.nsh
-	rm -rf portmaster-control.exe
+	rm -rf portmaster-start.exe

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Portmaster Notifier
 GenericName=Application Firewall Notifier
-Exec=portmaster-control run notifier --data=/var/lib/portmaster
+Exec=/var/lib/portmaster/portmaster-start notifier --data=/var/lib/portmaster
 Icon=/usr/share/pixmaps/portmaster.png
 Terminal=false
 Type=Application

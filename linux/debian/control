@@ -9,7 +9,7 @@ Package: portmaster
 Architecture: amd64
 Pre-Depends: ${misc:Depends}
 Depends: libnetfilter-queue1, libc6, ${shlibs:Depends}
-Recommends: gir1.2-harfbuzz-0.0
+Recommends: gir1.2-harfbuzz-0.0, libappindicator3-1
 Description: Application Firewall
  The Portmaster enables you to protect your data on your device. You
  are back in charge of your outgoing connections: you choose what data
