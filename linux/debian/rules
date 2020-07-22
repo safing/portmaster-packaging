@@ -9,7 +9,7 @@ build:	portmaster-control
 #	convert logo.png -resize 32x32 portmaster.png
 
 portmaster-control:
-	curl -o portmaster-control https://updates.safing.io/latest/linux_amd64/control/portmaster-control
+	curl -o portmaster-control --fail https://updates.safing.io/latest/linux_amd64/control/portmaster-control
 	# TODO: verify signature
 
 #Don't run strip for go-binaries

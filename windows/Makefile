@@ -3,7 +3,7 @@ WINE := $(shell command -v wine 2> /dev/null)
 all: portmaster-uninstaller.exe portmaster-installer.exe
 
 portmaster-control.exe:
-	curl -o portmaster-control.exe https://updates.safing.io/latest/windows_amd64/control/portmaster-control.exe
+	curl -o portmaster-control.exe --fail https://updates.safing.io/latest/windows_amd64/control/portmaster-control.exe
 
 portmaster-uninstaller.exe: portmaster-installer.nsi install_summary.nsh
 	makensis -DUNINSTALLER portmaster-installer.nsi
