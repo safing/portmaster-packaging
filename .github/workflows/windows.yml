@@ -1,4 +1,4 @@
-name: Build
+name: Windows
 
 on:
   push:
@@ -7,21 +7,6 @@ on:
     branches: [ master ]
 
 jobs:
-  build-deb:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: ./.github/actions/build-deb
-        id: build
-        with:
-          args: --unsigned-source --unsigned-changes --no-sign
-
-      - uses: actions/upload-artifact@v1
-        with:
-          name: ${{ steps.build.outputs.filename }}
-          path: ${{ steps.build.outputs.filename }}
-
   build-nsis:
     runs-on: ubuntu-latest
     steps:

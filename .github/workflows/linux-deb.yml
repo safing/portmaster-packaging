@@ -1,0 +1,54 @@
+name: Linux (.DEB)
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/build-deb
+        id: build
+        with:
+          args: --unsigned-source --unsigned-changes --no-sign
+
+      - uses: actions/upload-artifact@v1
+        with:
+          name: portmaster.deb
+          path: ${{ steps.build.outputs.filename }}
+
+  install-ubuntu:
+    name: "${{ matrix.container }}"
+    runs-on: ubuntu-latest
+    needs: build-deb
+    container: ${{ matrix.container }}
+    strategy:
+      matrix:
+        container:
+          - "ubuntu:latest"
+          - "ubuntu:18.04"
+          - "ubuntu:19.04"
+          - "ubuntu:20.04"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download .deb installer
+        uses: actions/download-artifact@v1
+        with:
+          name: portmaster.deb
+      
+      - name: Display working directory
+        run: ls -lah
+
+      - name: Update package index
+        run: apt update
+
+      - name: Install libnetfilter-queue1
+        run: apt install -y --no-install-recommends libnetfilter-queue1
+
+      - name: Install Portmaster
+        run: dpkg -i ./portmaster.deb

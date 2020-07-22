@@ -168,7 +168,7 @@ noupdate:
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 		"Publisher" "Safing ICS Technologies GmbH"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
-		"HelpLink" "https://reddit.com/r/safing/"
+		"HelpLink" "https://safing.io"
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 		"NoRepair" 1
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
