@@ -11,7 +11,7 @@ build:	portmaster-start
 #	convert logo.png -resize 32x32 portmaster.png
 
 portmaster-start:
-	curl -o portmaster-start $(STARTURL)
+	curl --fail -o portmaster-start $(STARTURL)
 
 #Don't run strip for go-binaries
 override_dh_strip:
