@@ -2,4 +2,7 @@
 
 . /usr/share/debconf/confmodule #just to make lintian happy and maybe prevent some sort of error ...
 
+/var/lib/portmaster/portmaster-start --data=/var/lib/portmaster update
+rm /usr/bin/portmaster-control || true
+
 #DEBHELPER#

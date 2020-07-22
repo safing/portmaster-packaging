@@ -26,7 +26,7 @@ SetCompress off
 
 InstallDir "$Programfiles64\Safing\Portmaster"
 !define Parent_InstallDir "$Programfiles64\Safing"
-!define ExeName "portmaster-control.exe"
+!define ExeName "portmaster-start.exe"
 !define LogoName "portmaster.ico"
 !define SnoreToastExe "SnoreToast.exe"
 
@@ -111,9 +111,9 @@ noupdate:
 	
 	SetShellVarContext all
 	CreateDirectory "$SMPROGRAMS\Portmaster"
-	CreateShortcut "$SMPROGRAMS\Portmaster\Portmaster.lnk" "$INSTDIR\${ExeName}" "run app --data=$DataPath" "$INSTDIR\portmaster.ico"
-	CreateShortcut "$SMPROGRAMS\Portmaster\Portmaster Notifier.lnk" "$INSTDIR\${ExeName}" "run notifier --data=$DataPath" "$INSTDIR\portmaster.ico"
-	CreateShortcut "$SMSTARTUP\Portmaster Notifier.lnk" "$INSTDIR\${ExeName}" "run notifier --data=$DataPath" "$INSTDIR\portmaster.ico"
+	CreateShortcut "$SMPROGRAMS\Portmaster\Portmaster.lnk" "$INSTDIR\${ExeName}" "app --data=$DataPath" "$INSTDIR\portmaster.ico"
+	CreateShortcut "$SMPROGRAMS\Portmaster\Portmaster Notifier.lnk" "$INSTDIR\${ExeName}" "notifier --data=$DataPath" "$INSTDIR\portmaster.ico"
+	CreateShortcut "$SMSTARTUP\Portmaster Notifier.lnk" "$INSTDIR\${ExeName}" "notifier --data=$DataPath" "$INSTDIR\portmaster.ico"
 
 ; The GUID can be read out like this: strings snoretoast.exe | grep -E '^\{[[:xdigit:]]{8}(-[[:xdigit:]]{4}){3}-[[:xdigit:]]{12}\}$' (maybe additional lines with false-positives)
 	!insertmacro ShortcutSetToastProperties "$SMPROGRAMS\Portmaster\Portmaster.lnk" "{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}" "io.safing.portmaster"
@@ -125,7 +125,18 @@ noupdate:
 	${EndIf}
 	DetailPrint "Returncode when setting Shortcut: $0 (0: S_OK)"
 
-	WriteRegStr HKLM "SOFTWARE\Classes\CLSID\{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}\LocalServer32" "" '"$INSTDIR\${ExeName}" run notifier-snoretoast'
+	WriteRegStr HKLM "SOFTWARE\Classes\CLSID\{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}\LocalServer32" "" '"$INSTDIR\${ExeName}" notifier-snoretoast'
+
+; download
+	nsExec::ExecToStack '$INSTDIR\${ExeName} update --data=$DataPath'
+	pop $0
+	pop $1
+	DetailPrint $1
+	${If} $0 <> 0
+		MessageBox MB_ICONEXCLAMATION "Failed to download Portmaster assets."
+		SetErrors
+		Abort
+	${EndIf}
 
 ; register Service
 	nsExec::ExecToStack '$INSTDIR\${ExeName} install core-service --data=$DataPath'
@@ -133,7 +144,7 @@ noupdate:
 	pop $1
 	DetailPrint $1
 	${If} $0 <> 0
-		MessageBox MB_ICONEXCLAMATION "registering Service was unsuccessfull, see Details"
+		MessageBox MB_ICONEXCLAMATION "Windows Service registration was unsuccessfull, see details."
 		SetErrors
 		Abort
 	${EndIf}
@@ -155,7 +166,7 @@ noupdate:
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 		"Publisher" "Safing ICS Technologies GmbH"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
-		"HelpLink" "https://discourse.safing.community/"
+		"HelpLink" "https://reddit.com/r/safing/"
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 		"NoRepair" 1
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \

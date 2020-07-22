@@ -1,6 +1,8 @@
 #!/usr/bin/make -f
+STARTURL ?= https://updates.safing.io/latest/linux_amd64/control/portmaster-start\?installer-build
+
 # We don't build here, we download the built binaries
-build:	portmaster-control
+build:	portmaster-start
 
 %:
 	dh $@ --with=systemd
@@ -8,9 +10,8 @@ build:	portmaster-control
 #portmaster.png:
 #	convert logo.png -resize 32x32 portmaster.png
 
-portmaster-control:
-	curl -o portmaster-control https://updates.safing.io/latest/linux_amd64/control/portmaster-control\?installer-build
-	# TODO: verify signature
+portmaster-start:
+	curl -o portmaster-start $(STARTURL)
 
 #Don't run strip for go-binaries
 override_dh_strip:
