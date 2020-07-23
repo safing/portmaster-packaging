@@ -1,17 +1,23 @@
+FROM ubuntu:18.04
 
-FROM debian:experimental
-LABEL maintainer="Patrick Pacher <patrick@safing.io>"
+ENV DEBIAN_FRONTEND noninteractive
 
-# Installs the `dpkg-buildpackage` command
-RUN apt-get update && apt-get install --no-install-recommends -y build-essential curl
-RUN dpkg --add-architecture i386 && \
-    apt-get update
-RUN apt-get install -y libc6-i686 libgcc-s1 # yeah, debian:experimental is, ... experimental ...
-RUN apt-get install --no-install-recommends -y \
-      wine \
-      wine32 \
-      cabextract
-RUN apt-get -t experimental update && apt-get -t experimental install ca-certificates -y --no-install-recommends nsis && apt-get clean
+# wine settings
+ENV WINEARCH win32
+ENV WINEDEBUG fixme-all
+ENV WINEPREFIX /wine
+
+RUN set -x \
+    && dpkg --add-architecture i386 \
+    && apt-get update -qy \
+    && apt-get install --no-install-recommends -qfy wine32-development wine-development wget curl ca-certificates build-essential \
+    && apt-get clean \
+    && wget -q http://downloads.sourceforge.net/project/nsis/NSIS%203/3.05/nsis-3.05-setup.exe \
+    && wine nsis-3.05-setup.exe /S \
+    && while pgrep wineserver >/dev/null; do echo "Waiting for wineserver"; sleep 1; done \
+    && rm -rf /tmp/.wine-* \
+    && echo 'wine '\''C:\Program Files\NSIS\makensis.exe'\'' "$@"' > /usr/bin/makensis \
+    && chmod +x /usr/bin/*
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
