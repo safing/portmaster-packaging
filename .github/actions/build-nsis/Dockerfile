@@ -6,7 +6,7 @@ LABEL maintainer="Patrick Pacher <patrick@safing.io>"
 RUN apt-get update && apt-get install --no-install-recommends -y build-essential curl
 RUN dpkg --add-architecture i386 && \
     apt-get update
-RUN apt-get install -y libc6-i686
+RUN apt-get install -y libc6-i686 libgcc-s1 # yeah, debian:experimental is, ... experimental ...
 RUN apt-get install --no-install-recommends -y \
       wine \
       wine32 \
