@@ -41,9 +41,6 @@ jobs:
         with:
           name: portmaster.deb
       
-      - name: Display working directory
-        run: ls -lah portmaster.deb
-
       - name: Update package index
         run: apt update 
 
@@ -55,3 +52,12 @@ jobs:
 
       - name: Install Portmaster
         run: bash -c "set -e ; dpkg -i ./portmaster.deb/*.deb"
+
+      - name: Verify executable portmaster-start
+        run: bash -c "set -e ; [[ -x /var/lib/portmaster/portmaster-start ]] || exit 1"
+
+      - name: Check core downloaded
+        run: bash -c "set -e ; [[ -x $(ls /var/lib/portmaster/updates/linux_amd64/core/portmaster-core*) ]] || exit 1"
+
+      - name: Uninstall
+        run: dpkg -r portmaster
