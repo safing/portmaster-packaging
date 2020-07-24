@@ -1,4 +1,4 @@
-portmaster (0.0.0.2) buster; urgency=medium
+portmaster (0.4.1.0) buster; urgency=medium
 
   * Updated systemd service file
   * Migrate from portmaster-control to portmaster-start

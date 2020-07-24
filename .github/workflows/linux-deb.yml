@@ -22,6 +22,12 @@ jobs:
           name: portmaster.deb
           path: ${{ steps.build.outputs.filename }}
 
+      # once more but with the package version
+      - uses: actions/upload-artifact@v1
+        with:
+          name: ${{ steps.build.outputs.filename }}
+          path: ${{ steps.build.outputs.filename }}
+
   install-ubuntu:
     name: ${{ matrix.container }}
     runs-on: ubuntu-latest
