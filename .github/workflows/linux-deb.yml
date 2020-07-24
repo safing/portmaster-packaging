@@ -51,7 +51,7 @@ jobs:
         run: apt install -y --no-install-recommends libnetfilter-queue1
 
       - name: Install Portmaster
-        run: bash -c "set -e ; dpkg -i ./portmaster.deb/*.deb"
+        run: bash -c "set -e ; PMSTART_UPDATE_AGENT=GitHub dpkg -i ./portmaster.deb/*.deb"
 
       - name: Verify executable portmaster-start
         run: bash -c "set -e ; [[ -x /var/lib/portmaster/portmaster-start ]] || exit 1"

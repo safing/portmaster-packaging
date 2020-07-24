@@ -4,7 +4,7 @@ STARTURL ?= https://updates.safing.io/latest/windows_amd64/start/portmaster-star
 all: portmaster-uninstaller.exe portmaster-installer.exe
 
 portmaster-start.exe:
-	curl --fail -o portmaster-start.exe $(STARTURL)
+	curl --fail --user-agent GitHub -o portmaster-start.exe $(STARTURL)
 
 portmaster-uninstaller.exe: portmaster-installer.nsi install_summary.nsh
 	makensis -DUNINSTALLER portmaster-installer.nsi
