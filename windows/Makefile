@@ -1,5 +1,6 @@
-WINE := $(shell command -v wine 2> /dev/null)
-STARTURL ?= https://updates.safing.io/latest/windows_amd64/start/portmaster-start.exe\?CI
+# Note: Built for execution in container .github/actions/build-nsis
+
+STARTURL ?= https://updates.safing.io/latest/windows_amd64/start/portmaster-start.exe\?client=Github
 
 all: portmaster-uninstaller.exe portmaster-installer.exe
 
@@ -7,15 +8,13 @@ portmaster-start.exe:
 	curl --fail --user-agent GitHub -o portmaster-start.exe $(STARTURL)
 
 portmaster-uninstaller.exe: portmaster-installer.nsi install_summary.nsh
+	echo hi
 	makensis -DUNINSTALLER portmaster-installer.nsi
-ifndef WINE
-		sudo docker run --rm -it -v $(shell pwd):/mnt jamesnetherton/wine /mnt/uninstaller_pkg.exe
-		sudo chown $(shell id -u)":"$(shell id -g) portmaster-uninstaller.exe uninstaller_pkg.exe
-else
-		# CI support, we have wine available
-		WINEPREFIX=/tmp wine ./uninstaller_pkg.exe
+	WINEPREFIX=/tmp wine ./uninstaller_pkg.exe
+ifdef SIGN
+	@echo -e "If wanted, sign now (on Windows) using:\nsign.bat portmaster-uninstaller.exe\npress enter to continue"
+	@read x
 endif
-	#TODO: sign
 
 install_summary.nsh:
 	echo -n '$${NSD_SetText} $$0 "' > install_summary.nsh
@@ -24,7 +23,10 @@ install_summary.nsh:
 
 portmaster-installer.exe: portmaster-start.exe portmaster-installer.nsi portmaster-uninstaller.exe install_summary.nsh
 	makensis -DINSTALLER -DPRODUCTION portmaster-installer.nsi #Production enables good compression (takes longer)
-	#TODO: sign
+ifdef SIGN
+	@echo -e "If wanted, sign now (on Windows) using:\nsign.bat portmaster-installer.exe\npress enter to continue"
+	@read x
+endif
 
 clean:
 	rm -f portmaster-uninstaller.exe
