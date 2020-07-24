@@ -18,7 +18,8 @@ print_dl_help() {
 
 if [ -z "${PM_SKIP_DOWNLOAD}" ]; then
     log "downloading assets, this may take a while"
-    /var/lib/portmaster/portmaster-start --data=/var/lib/portmaster update || \
+    PMSTART_UPDATE_AGENT=${PMSTART_UPDATE_AGENT:=Start}
+    /var/lib/portmaster/portmaster-start --data=/var/lib/portmaster update --update-agent ${PMSTART_UPDATE_AGENT}  || \
         (
             print_dl_help "Downloading assets failed!"
             log "installation successfull"
