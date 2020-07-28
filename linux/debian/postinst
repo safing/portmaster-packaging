@@ -11,21 +11,21 @@ log() {
 print_dl_help() {
     log ""
     log "\e[33;1mWARN: $1\e[0m"
-    log "downloading assets can be initiated by starting the Portmaster service or by running:"
+    log "downloading modules can be initiated by starting the Portmaster service or by running:"
     log "/var/lib/portmaster/portmaster-start --data=/var/lib/portmaster update"
     log ""
 }
 
 if [ -z "${PM_SKIP_DOWNLOAD}" ]; then
-    log "downloading assets, this may take a while"
+    log "downloading modules, this may take a while"
     PMSTART_UPDATE_AGENT=${PMSTART_UPDATE_AGENT:=Start}
     /var/lib/portmaster/portmaster-start --data=/var/lib/portmaster update --update-agent ${PMSTART_UPDATE_AGENT}  || \
         (
-            print_dl_help "Downloading assets failed!"
+            print_dl_help "Downloading modules failed!"
             log "installation successfull"
         )
 else
-    print_dl_help "skipped downloading assets!"
+    print_dl_help "skipped downloading modules!"
 fi
 
 # with 0.4.0 portmaster-control has ben renamed to portmaster-start

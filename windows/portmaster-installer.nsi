@@ -128,13 +128,13 @@ noupdate:
 	WriteRegStr HKLM "SOFTWARE\Classes\CLSID\{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}\LocalServer32" "" '"$INSTDIR\${ExeName}" notifier-snoretoast'
 
 ; download
-	DetailPrint "Downloading portmaster updates, this may take a while ..."
+	DetailPrint "Downloading Portmaster modules, this may take a while ..."
 	nsExec::ExecToStack '$INSTDIR\${ExeName} update --data=$DataPath'
 	pop $0
 	pop $1
 	; DetailPrint $1 ; # would print > BOF from portmaster-start log
 	${If} $0 <> 0
-		MessageBox MB_ICONEXCLAMATION "Failed to download Portmaster updates."
+		MessageBox MB_ICONEXCLAMATION "Failed to download Portmaster modules."
 		SetErrors
 		Abort
 	${EndIf}
