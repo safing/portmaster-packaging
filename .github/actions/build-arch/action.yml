@@ -1,0 +1,13 @@
+name: 'Build ArchLinux AUR package'
+description: 'Build a ArchLinux AUR package'
+outputs:
+  filename:
+    description: 'Name of the built `.pkg.tar.xz` file'
+
+runs:
+  using: docker
+  image: Dockerfile
+
+branding:
+  icon: package
+  color: gray-dark
