@@ -2,13 +2,19 @@
 STARTURL ?= https://updates.safing.io/latest/linux_amd64/start/portmaster-start\?CI
 
 # We don't build here, we download the built binaries
-build:	portmaster-start
+build: icons portmaster-start
 
 %:
 	dh $@ --with=systemd
 
 #portmaster.png:
 #	convert logo.png -resize 32x32 portmaster.png
+
+icons:
+	for res in 16 32 48 96 128 ; do \
+		mkdir -p icons/$$res ; \
+		convert ./portmaster_logo.png -resize $${res}x$${res} icons/$${res}/portmaster.png ; \
+	done
 
 portmaster-start:
 	curl --fail --user-agent GitHub -o portmaster-start $(STARTURL)
