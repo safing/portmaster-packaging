@@ -1,6 +1,8 @@
 #!/usr/bin/make -f
 STARTURL ?= https://updates.safing.io/latest/linux_amd64/start/portmaster-start\?CI
 
+.PHONY: icons
+
 # We don't build here, we download the built binaries
 build: icons portmaster-start
 
