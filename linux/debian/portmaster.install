@@ -2,4 +2,9 @@ portmaster_notifier.desktop /etc/xdg/autostart/
 portmaster-start /var/lib/portmaster
 portmaster.desktop /usr/share/applications/
 portmaster_notifier.desktop /usr/share/applications/
-portmaster.png /usr/share/pixmaps/
+icons/32/portmaster.png /usr/share/pixmaps/
+icons/16/portmaster.png /usr/share/icons/hicolor/16x16/apps/
+icons/32/portmaster.png /usr/share/icons/hicolor/32x32/apps/
+icons/48/portmaster.png /usr/share/icons/hicolor/48x48/apps/
+icons/96/portmaster.png /usr/share/icons/hicolor/96x96/apps/
+icons/128/portmaster.png /usr/share/icons/hicolor/128x128/apps/

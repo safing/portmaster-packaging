@@ -2,7 +2,7 @@
 Name=Portmaster
 GenericName=Application Firewall
 Exec=/var/lib/portmaster/portmaster-start app --data=/var/lib/portmaster
-Icon=/usr/share/pixmaps/portmaster.png
+Icon=portmaster
 Terminal=false
 Type=Application
 Categories=System

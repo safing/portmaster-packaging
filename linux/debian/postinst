@@ -28,6 +28,7 @@ else
     print_dl_help "skipped downloading modules!"
 fi
 
+
 # with 0.4.0 portmaster-control has ben renamed to portmaster-start
 # and is not placed into /usr/bin anymore.
 rm /usr/bin/portmaster-control 2> /dev/null || true
