@@ -1,6 +1,7 @@
-portmaster (0.4.1.1) buster; urgency=low
+portmaster (0.4.1.2) buster; urgency=low
 
   * Fix application icon
+  * Remove SystemCallFilter as it's broken on Mint 19
 
  -- Safing <noc@safing.io>  Thu, 30 Jul 2020 09:36:25 +0200
 
