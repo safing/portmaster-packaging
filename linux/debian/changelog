@@ -1,3 +1,9 @@
+portmaster (0.4.1.1) buster; urgency=low
+
+  * Fix application icon
+
+ -- Safing <noc@safing.io>  Thu, 30 Jul 2020 09:36:25 +0200
+
 portmaster (0.4.1.0) buster; urgency=medium
 
   * Updated systemd service file
