@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-. /usr/share/debconf/confmodule #just to make lintian happy and maybe prevent some sort of error ...
+. /usr/share/debconf/confmodule
 
 chmod a+x /var/lib/portmaster/portmaster-start
 
@@ -16,21 +16,28 @@ print_dl_help() {
     log ""
 }
 
-if [ -z "${PM_SKIP_DOWNLOAD}" ]; then
-    log "downloading modules, this may take a while"
-    PMSTART_UPDATE_AGENT=${PMSTART_UPDATE_AGENT:=Start}
-    /var/lib/portmaster/portmaster-start --data=/var/lib/portmaster update --update-agent ${PMSTART_UPDATE_AGENT}  || \
-        (
-            print_dl_help "Downloading modules failed!"
-            log "installation successfull"
-        )
-else
-    print_dl_help "skipped downloading modules!"
+#
+# Skip downloading updates if there's already
+# stable.json available.
+#
+if [ ! -f "/var/lib/portmaster/updates/stable.json" ]
+then
+    if [ -z "${PM_SKIP_DOWNLOAD}" ]
+    then
+        log "downloading modules, this may take a while"
+        PMSTART_UPDATE_AGENT=${PMSTART_UPDATE_AGENT:=Start}
+        /var/lib/portmaster/portmaster-start --data=/var/lib/portmaster update --update-agent ${PMSTART_UPDATE_AGENT}  || \
+            (
+                print_dl_help "Downloading modules failed!"
+                log "installation successfull"
+            )
+    else
+        print_dl_help "skipped downloading modules!"
+    fi
 fi
-
 
 # with 0.4.0 portmaster-control has ben renamed to portmaster-start
 # and is not placed into /usr/bin anymore.
-rm /usr/bin/portmaster-control 2> /dev/null || true
+rm /usr/bin/portmaster-control 2>/dev/null >&2 || true
 
 #DEBHELPER#

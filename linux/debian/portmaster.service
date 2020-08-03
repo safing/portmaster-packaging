@@ -7,14 +7,6 @@ After=systemd-networkd.service
 Conflicts=shutdown.target
 Wants=nss-lookup.target
 
-# The Portmaster will conflict with almost all DNS services that
-# that are listening on 53/upd or 53/tcp. Only DNS services that
-# are likely to be running on desktop systems are listed here so
-# systemd can gracefully stop them when portmaster is started.
-# Note that manually starting one of the below services will instruct
-# systemd to request portmaster to stop.
-Conflicts=systemd-resolved.service dnsmasq.service unbound.service nextdns.service
-
 [Service]
 Type=simple
 Restart=always
@@ -27,10 +19,9 @@ PIDFile=/var/lib/portmaster/core-lock.pid
 Environment=LOGLEVEL=info
 Environment=PORTMASTER_ARGS=
 EnvironmentFile=-/etc/default/portmaster
-ProtectSystem=strict
-ReadWritePaths=/var/lib/portmaster
-# Portmaster calls iptables which requires to set xtables.lock
-ReadWritePaths=/run/xtables.lock
+ProtectSystem=true
+#ReadWritePaths=/var/lib/portmaster
+#ReadWritePaths=/run/xtables.lock
 RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET AF_INET6
 RestrictNamespaces=yes
 RestrictSUIDSGID=yes
@@ -54,6 +45,7 @@ ExecStart=/var/lib/portmaster/portmaster-start --data /var/lib/portmaster core -
 ExecStopPost=-/sbin/iptables -F C17
 ExecStopPost=-/sbin/iptables -t mangle -F C170
 ExecStopPost=-/sbin/iptables -t mangle -F 171
+ExecStopPost=-bash -c "systemctl is-enabled systemd-resolved && systemctl restart systemd-resolved"
 
 [Install]
 WantedBy=multi-user.target

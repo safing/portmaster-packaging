@@ -7,6 +7,10 @@ RUN apt-get update \
     && apt-get install curl build-essential debhelper devscripts equivs imagemagick -y --no-install-recommends \
     && apt-get clean
 
+# Install portmaster dependencies
+RUN apt-get update \
+    && apt-get install libnetfilter-queue1 -y --no-install-recommends \
+    && apt-get clean
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
