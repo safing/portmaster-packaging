@@ -24,7 +24,9 @@ SetCompress off
 !endif
 !endif
 
-InstallDir "$Programfiles64\Safing\Portmaster"
+#InstallDir "$Programfiles64\Safing\Portmaster"
+!define ProgrammFolderLink "$Programfiles64\Safing\Portmaster"
+!define Parent_ProgrammFolderLink "$Programfiles64\Safing"
 !define Parent_InstallDir "$Programfiles64\Safing"
 !define ExeName "portmaster-start.exe"
 !define LogoName "portmaster.ico"
@@ -33,8 +35,7 @@ InstallDir "$Programfiles64\Safing\Portmaster"
 !define MUI_ABORTWARNING
 !define MUI_LANGDLL_ALLLANGUAGES ; The Multi-Language-Part is a modified version of the MultiLanguage-NSIS-Example
 
-Var DataPath
-Var DataPath_parent
+Var InstDir_parent
 
 ;;
 ; Pages
@@ -73,14 +74,14 @@ FunctionEnd
 
 Function .onInit
 	ReadEnvStr $0 PROGRAMDATA
-	StrCpy $DataPath "$0\Safing\Portmaster"
-	StrCpy $DataPath_parent "$0\Safing"
+	StrCpy $InstDir "$0\Safing\Portmaster"
+	StrCpy $InstDir_parent "$0\Safing"
 FunctionEnd
 
 Function un.onInit
 	ReadEnvStr $0 PROGRAMDATA
-	StrCpy $DataPath "$0\Safing\Portmaster"
-	StrCpy $DataPath_parent "$0\Safing"
+	StrCpy $InstDir "$0\Safing\Portmaster"
+	StrCpy $InstDir_parent "$0\Safing"
 FunctionEnd
 
 !ifdef INSTALLER 
@@ -96,24 +97,24 @@ Section "Install"
 	
 	SetOutPath $INSTDIR
 
-	IfFileExists "$INSTDIR\${ExeName}" 0 noupdate
+	IfFileExists "$INSTDIR\${ExeName}" 0 dontUpdate
 		; The Exe already exists, so we will have to move the old exe first
 		Delete "$INSTDIR\${ExeName}.bak"
 		Rename "$INSTDIR\${ExeName}" "$INSTDIR\${ExeName}.bak"
 		Delete /REBOOTOK "$INSTDIR\${ExeName}.bak"
-noupdate:	
+dontUpdate:	
 	File "${ExeName}"
 
 	File "${LogoName}"
 	File "portmaster-uninstaller.exe"
 	
-	CreateShortcut "$INSTDIR\DATA.lnk" "$DataPath"
+	CreateShortcut "${ProgrammFolderLink}.lnk" "$InstDir"
 	
 	SetShellVarContext all
 	CreateDirectory "$SMPROGRAMS\Portmaster"
-	CreateShortcut "$SMPROGRAMS\Portmaster\Portmaster.lnk" "$INSTDIR\${ExeName}" "app --data=$DataPath" "$INSTDIR\portmaster.ico"
-	CreateShortcut "$SMPROGRAMS\Portmaster\Portmaster Notifier.lnk" "$INSTDIR\${ExeName}" "notifier --data=$DataPath" "$INSTDIR\portmaster.ico"
-	CreateShortcut "$SMSTARTUP\Portmaster Notifier.lnk" "$INSTDIR\${ExeName}" "notifier --data=$DataPath" "$INSTDIR\portmaster.ico"
+	CreateShortcut "$SMPROGRAMS\Portmaster\Portmaster.lnk" "$INSTDIR\${ExeName}" "app --data=$InstDir" "$INSTDIR\portmaster.ico"
+	CreateShortcut "$SMPROGRAMS\Portmaster\Portmaster Notifier.lnk" "$INSTDIR\${ExeName}" "notifier --data=$InstDir" "$INSTDIR\portmaster.ico"
+	CreateShortcut "$SMSTARTUP\Portmaster Notifier.lnk" "$INSTDIR\${ExeName}" "notifier --data=$InstDir" "$INSTDIR\portmaster.ico"
 
 ; The GUID can be read out like this: strings snoretoast.exe | grep -E '^\{[[:xdigit:]]{8}(-[[:xdigit:]]{4}){3}-[[:xdigit:]]{12}\}$' (maybe additional lines with false-positives)
 	!insertmacro ShortcutSetToastProperties "$SMPROGRAMS\Portmaster\Portmaster.lnk" "{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}" "io.safing.portmaster"
@@ -129,7 +130,7 @@ noupdate:
 
 ; download
 	DetailPrint "Downloading Portmaster modules, this may take a while ..."
-	nsExec::ExecToStack '$INSTDIR\${ExeName} update --data=$DataPath'
+	nsExec::ExecToStack '$INSTDIR\${ExeName} update --data=$InstDir'
 	pop $0
 	pop $1
 	; DetailPrint $1 ; # would print > BOF from portmaster-start log
@@ -141,7 +142,7 @@ noupdate:
 
 ; register Service
 	DetailPrint "Installing Portmaster as a Windows Service ..."
-	nsExec::ExecToStack '$INSTDIR\${ExeName} install core-service --data=$DataPath'
+	nsExec::ExecToStack '$INSTDIR\${ExeName} install core-service --data=$InstDir'
 	pop $0
 	pop $1
 	DetailPrint $1
@@ -193,7 +194,7 @@ Section Un.Portmaster SectionPortmaster
 	SetShellVarContext all
 
 ; unregister Service
-	nsExec::ExecToStack '$INSTDIR\${ExeName} uninstall core-service --data=$DataPath'
+	nsExec::ExecToStack '$INSTDIR\${ExeName} uninstall core-service --data=$InstDir'
 	pop $0
 	pop $1
 	DetailPrint $1
@@ -203,10 +204,10 @@ Section Un.Portmaster SectionPortmaster
 		Abort
 	${EndIf}
 	
-	RMDir /R "$INSTDIR"
-	RMDir "${Parent_InstallDir}"
+	RMDir /R "$ProgrammFolderLink"
+	RMDir "${Parent_ProgrammFolderLink}"
 	RMDIR /R "$SMPROGRAMS\Portmaster"
-	RMDIR /R "$DataPath\updates"
+	RMDIR /R "$InstDir\updates"
 	Delete "$SMSTARTUP\Portmaster Notifier.lnk"
 	
 	DeleteRegKey HKLM "SOFTWARE\Classes\CLSID\{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}\LocalServer32"
@@ -220,8 +221,8 @@ Section Un.Portmaster SectionPortmaster
 SectionEnd
 
 Section Un.Data SectionData
-	RMDIR /R "$DataPath"
-	RMDIR "$DataPath_parent"
+	RMDIR /R "$InstDir"
+	RMDIR "$InstDir_parent"
 SectionEnd
 
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN
