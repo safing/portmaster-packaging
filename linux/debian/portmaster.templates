@@ -4,4 +4,4 @@ Description: Portmaster updates itself automatically
 
 Template: portmaster/remove_required
 Type: note
-Description: Detected an old and incompatible portmaster installation that needs to be removed first. Please execute `apt remove portmaster` and reboot.
+Description: Detected an old and incompatible portmaster installation that needs to be purged first. Please execute `apt purge portmaster` and reboot.
