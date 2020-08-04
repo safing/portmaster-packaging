@@ -7,7 +7,7 @@ STARTURL ?= https://updates.safing.io/latest/linux_amd64/start/portmaster-start\
 build: icons portmaster-start
 
 %:
-	dh $@ --with=systemd
+	dh $@ 
 
 #portmaster.png:
 #	convert logo.png -resize 32x32 portmaster.png
@@ -23,3 +23,6 @@ portmaster-start:
 
 #Don't run strip for go-binaries
 override_dh_strip:
+
+override_dh_installsystemd:
+	dh_installsystemd -r

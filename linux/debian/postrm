@@ -2,8 +2,15 @@
 
 #DEBHELPER#
 
-if [ "$1" = "purge" ] ; then
-	rm -rf /var/lib/portmaster;
-else
-	rm -rf /var/lib/portmaster/updates/;
-fi
+case "$1" in
+	purge)
+		rm -rf /var/lib/portmaster
+		;;
+	remove)
+		rm -rf /var/lib/portmaster/updates
+		;;
+	upgrade)
+		# We don't want to remove anything in the upgrade
+		# phase.
+		;;
+esac

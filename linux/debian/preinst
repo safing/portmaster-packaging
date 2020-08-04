@@ -2,4 +2,16 @@
 
 . /usr/share/debconf/confmodule
 
+if [ -d /var/lib/portmaster ] &&
+   [ "$2" = "0.0.0-1" ]
+then
+    db_input high portmaster/remove_required
+    db_go
+
+    echo "\e[31;1mportmaster: \e[0m Detected unsupported portmaster installation $2. Uninstallation is required!"
+    echo "\e[31;1mportmaster: \e[0m \tapt purge portmaster"
+
+    exit 1
+fi
+
 #DEBHELPER#

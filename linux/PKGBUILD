@@ -18,9 +18,9 @@ source=("portmaster-start::https://updates.safing.io/linux_amd64/start/portmaste
 noextract=('portmaster-start')
 md5sums=('0b529627ba8ba7c8331538c85e464d00'
   '19864fff9d542c427acb727636ac5390'
-  '51c3e38b7db3add32e462819c6d1f4e5'
+  'cebfc4aa5f12a1da9b9ebf70f26f0d6f'
   'bd72c66922a3cdb089fa80daba1772f8'
-  'd4425dab7263b8c64ae0c460e03dc8c8')
+  '498ef8b7a6b8fb749eb78bc9c8ea272e')
 
 prepare() {
 	for res in 16 32 48 96 128 ; do
