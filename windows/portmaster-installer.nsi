@@ -97,7 +97,34 @@ Section "Install"
 	
 	SetOutPath $INSTDIR
 
+	SetShellVarContext all
+
+	IfFileExists "$Programfiles64\Safing\Portmaster\${ExeName}" 0 noAncientUpdate
+		DetailPrint "Removing old Portmaster Files"
+
+		nsExec::ExecToStack '$Programfiles64\Safing\Portmaster\${ExeName} uninstall core-service --data=$Instdir'
+		pop $0
+		pop $1
+		DetailPrint $1
+		${If} $0 <> 0
+			MessageBox MB_ICONEXCLAMATION "Deleting Service was unsuccessfull, see Details"
+			SetErrors
+			Abort
+		${EndIf}
+		
+		RMDir /R "$Programfiles64\Safing\Portmaster\"
+		RMDIR /R "$SMPROGRAMS\Portmaster"
+		Delete "$SMSTARTUP\Portmaster Notifier.lnk"
+
+		CreateDirectory $INSTDIR
+		Delete "$Programfiles64\Safing\Portmaster\${ExeName}.bak"
+		Rename "$Programfiles64\Safing\Portmaster\${ExeName}" "$INSTDIR\${ExeName}.bak"
+		Delete /REBOOTOK "$INSTDIR\${ExeName}.bak"
+noAncientUpdate:	
+
 	IfFileExists "$INSTDIR\${ExeName}" 0 dontUpdate
+		DetailPrint "Removing old Portmaster Files"
+
 		; The Exe already exists, so we will have to move the old exe first
 		Delete "$INSTDIR\${ExeName}.bak"
 		Rename "$INSTDIR\${ExeName}" "$INSTDIR\${ExeName}.bak"
@@ -108,6 +135,7 @@ dontUpdate:
 	File "${LogoName}"
 	File "portmaster-uninstaller.exe"
 	
+	CreateDirectory "${Parent_ProgrammFolderLink}"
 	CreateShortcut "${ProgrammFolderLink}.lnk" "$InstDir"
 	
 	SetShellVarContext all
@@ -135,9 +163,7 @@ dontUpdate:
 	pop $1
 	; DetailPrint $1 ; # would print > BOF from portmaster-start log
 	${If} $0 <> 0
-		MessageBox MB_ICONEXCLAMATION "Failed to download Portmaster modules."
-		SetErrors
-		Abort
+		MessageBox MB_ICONEXCLAMATION "Failed to download Portmaster modules. The portmaster service will attempt to download the modules when started. Note that it will take some time before you see it starting."
 	${EndIf}
 
 ; register Service
