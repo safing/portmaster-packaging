@@ -1,0 +1,4 @@
+post_remove() {
+    echo "Removing portmaster modules"
+    rm -f var/lib/portmaster/updates
+}

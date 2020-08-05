@@ -1,10 +1,11 @@
 # Maintainer: Patrick Pacher <patrick@safing.io>
 pkgname=portmaster
-pkgver=0.4.1
+pkgver=0.4.2
 pkgrel=1
 pkgdesc='Application Firewall: Block Mass Surveillance - Love Freedom'
 arch=('x86_64')
 license=('AGPL3')
+install=arch.install
 depends=('libnetfilter_queue' 'webkit2gtk')
 makedepends=('imagemagick') # for convert
 optdepends=('libappindicator-gtk3: for systray indicator')
@@ -16,7 +17,7 @@ source=("portmaster-start::https://updates.safing.io/linux_amd64/start/portmaste
 		'./portmaster_logo.png'
 		"portmaster.service::file://$(pwd)/debian/portmaster.service")
 noextract=('portmaster-start')
-md5sums=('0b529627ba8ba7c8331538c85e464d00'
+md5sums=('944cf556ca4b198834304f397ca978c1'
   '19864fff9d542c427acb727636ac5390'
   'cebfc4aa5f12a1da9b9ebf70f26f0d6f'
   'bd72c66922a3cdb089fa80daba1772f8'
