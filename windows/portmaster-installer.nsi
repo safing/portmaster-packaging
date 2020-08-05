@@ -25,7 +25,7 @@ SetCompress off
 !endif
 
 #InstallDir "$Programfiles64\Safing\Portmaster"
-!define ProgrammFolderLink "$Programfiles64\Safing\Portmaster"
+!define ProgrammFolderLink "$Programfiles64\Safing\Portmaster.lnk"
 !define Parent_ProgrammFolderLink "$Programfiles64\Safing"
 !define Parent_InstallDir "$Programfiles64\Safing"
 !define ExeName "portmaster-start.exe"
@@ -136,7 +136,7 @@ dontUpdate:
 	File "portmaster-uninstaller.exe"
 	
 	CreateDirectory "${Parent_ProgrammFolderLink}"
-	CreateShortcut "${ProgrammFolderLink}.lnk" "$InstDir"
+	CreateShortcut "${ProgrammFolderLink}" "$InstDir"
 	
 	SetShellVarContext all
 	CreateDirectory "$SMPROGRAMS\Portmaster"
@@ -230,7 +230,7 @@ Section Un.Portmaster SectionPortmaster
 		Abort
 	${EndIf}
 	
-	RMDir /R "$ProgrammFolderLink"
+	Delete "$ProgrammFolderLink"
 	RMDir "${Parent_ProgrammFolderLink}"
 	RMDIR /R "$SMPROGRAMS\Portmaster"
 	RMDIR /R "$InstDir\updates"
