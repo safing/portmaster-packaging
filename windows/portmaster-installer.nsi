@@ -229,11 +229,6 @@ Section Un.Portmaster SectionPortmaster
 		SetErrors
 		Abort
 	${EndIf}
-	
-	Delete "$ProgrammFolderLink"
-	RMDir "${Parent_ProgrammFolderLink}"
-	RMDIR /R "$SMPROGRAMS\Portmaster"
-	RMDIR /R "$InstDir\updates"
 	Delete "$SMSTARTUP\Portmaster Notifier.lnk"
 	
 	DeleteRegKey HKLM "SOFTWARE\Classes\CLSID\{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}\LocalServer32"
@@ -244,6 +239,14 @@ Section Un.Portmaster SectionPortmaster
 		WriteRegDWORD HKLM "SYSTEM\CurrentControlSet\services\Dnscache" "Start" 2 ; start DNSCache again (on reboot)
 		SetRebootFlag true
 	${EndIf}
+	
+	Delete "$ProgrammFolderLink"
+	RMDir "${Parent_ProgrammFolderLink}"
+	RMDIR /R "$SMPROGRAMS\Portmaster"
+	RMDIR /R "$InstDir\updates"
+	Delete "$InstDir\portmaster-start.exe"
+	Delete "$InstDir\portmaster-uninstaller.exe"
+	Delete "$InstDir\portmaster.ico"
 SectionEnd
 
 Section Un.Data SectionData
