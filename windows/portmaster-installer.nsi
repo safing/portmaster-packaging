@@ -115,10 +115,7 @@ Section "Install"
 		RMDIR /R "$SMPROGRAMS\Portmaster"
 		Delete "$SMSTARTUP\Portmaster Notifier.lnk"
 
-		CreateDirectory $INSTDIR
-		Delete "$Programfiles64\Safing\Portmaster\${ExeName}.bak"
-		Rename "$Programfiles64\Safing\Portmaster\${ExeName}" "$INSTDIR\${ExeName}.bak"
-		Delete /REBOOTOK "$INSTDIR\${ExeName}.bak"
+		RMDir /R /REBOOTOK "$Programfiles64\Safing\Portmaster"
 noAncientUpdate:	
 
 	IfFileExists "$INSTDIR\${ExeName}" 0 dontUpdate
