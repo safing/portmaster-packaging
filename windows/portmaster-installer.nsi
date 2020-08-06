@@ -174,6 +174,7 @@ dontUpdate:
 		Abort
 	${EndIf}
 
+	;Actually gets placed at HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster because NSIS is 32 Bit
 ;WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 ;		"InstallDate" "" ; TODO
 ;WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
