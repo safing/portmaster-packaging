@@ -239,15 +239,15 @@ Section Un.Portmaster SectionPortmaster
 	Delete "${ProgrammFolderLink}"
 	RMDir "${Parent_ProgrammFolderLink}"
 	RMDIR /R "$SMPROGRAMS\Portmaster"
-	RMDIR /R "$InstDir\updates"
-	Delete "$InstDir\portmaster-start.exe"
-	Delete "$InstDir\portmaster-uninstaller.exe"
-	Delete "$InstDir\portmaster.ico"
+	RMDIR /R /REBOOTOK "$InstDir\updates"
+	Delete /REBOOTOK "$InstDir\portmaster-start.exe"
+	Delete /REBOOTOK "$InstDir\portmaster-uninstaller.exe"
+	Delete /REBOOTOK "$InstDir\portmaster.ico"
 SectionEnd
 
 Section Un.Data SectionData
-	RMDIR /R "$InstDir"
-	RMDIR "$InstDir_parent"
+	RMDIR /R /REBOOTOK "$InstDir"
+	RMDIR /REBOOTOK "$InstDir_parent"
 SectionEnd
 
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN
