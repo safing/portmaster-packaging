@@ -98,7 +98,7 @@ Section "Install"
 
 	SetShellVarContext all
 
-	IfFileExists "$Programfiles64\Safing\Portmaster\${ExeName}" 0 noAncientUpdate
+	IfFileExists "$Programfiles64\Safing\Portmaster" 0 noAncientUpdate
 		DetailPrint "Removing old Portmaster Files"
 
 		nsExec::ExecToStack '$Programfiles64\Safing\Portmaster\${ExeName} uninstall core-service --data=$Instdir'
