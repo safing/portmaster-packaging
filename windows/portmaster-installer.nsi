@@ -10,18 +10,18 @@ Unicode true ; The Multi-Language-Part is a modified version of the MultiLanguag
 Name "Portmaster"
 
 !ifdef UNINSTALLER
-SilentInstall silent
-OutFile "uninstaller_pkg.exe"
-SetCompress off
+	SilentInstall silent
+	OutFile "uninstaller_pkg.exe"
+	SetCompress off
 !endif
 !ifdef INSTALLER
-OutFile "portmaster-installer.exe"
+	OutFile "portmaster-installer.exe"
 
-!ifdef PRODUCTION
-SetCompressor /SOLID lzma
-!else
-SetCompress off
-!endif
+	!ifdef PRODUCTION
+		SetCompressor /SOLID lzma
+	!else
+		SetCompress off
+	!endif
 !endif
 
 #InstallDir "$Programfiles64\Safing\Portmaster"
@@ -240,7 +240,7 @@ Section Un.Portmaster SectionPortmaster
 		SetRebootFlag true
 	${EndIf}
 	
-	Delete "$ProgrammFolderLink"
+	Delete "${ProgrammFolderLink}"
 	RMDir "${Parent_ProgrammFolderLink}"
 	RMDIR /R "$SMPROGRAMS\Portmaster"
 	RMDIR /R "$InstDir\updates"
