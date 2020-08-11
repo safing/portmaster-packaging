@@ -100,21 +100,9 @@ Section "Install"
 
 	IfFileExists "$Programfiles64\Safing\Portmaster" 0 noAncientUpdate
 		DetailPrint "Removing old Portmaster Files"
-
-		nsExec::ExecToStack '$Programfiles64\Safing\Portmaster\${ExeName} uninstall core-service --data=$Instdir'
-		pop $0
-		pop $1
-		DetailPrint $1
-		${If} $0 <> 0
-			MessageBox MB_ICONEXCLAMATION "Deleting Service was unsuccessfull, see Details"
-			SetErrors
-			Abort
-		${EndIf}
 		
-		RMDir /R "$Programfiles64\Safing\Portmaster\"
 		RMDIR /R "$SMPROGRAMS\Portmaster"
 		Delete "$SMSTARTUP\Portmaster Notifier.lnk"
-
 		RMDir /R /REBOOTOK "$Programfiles64\Safing\Portmaster"
 noAncientUpdate:	
 
