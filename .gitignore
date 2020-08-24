@@ -6,8 +6,5 @@
 /linux/debian/*.substvars
 /linux/debian/*.debhelper
 /linux/debian/portmaster/
-/windows/portmaster-start.exe
-/windows/portmaster-installer.exe
-/windows/portmaster-uninstaller.exe
-/windows/uninstaller_pkg.exe
+*.exe
 /windows/install_summary.nsh

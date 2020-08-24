@@ -16,7 +16,7 @@ ifdef SIGN
 	@read x
 endif
 
-install_summary.nsh:
+install_summary.nsh: install_summary.rtf
 	echo -n '$${NSD_SetText} $$0 "' > install_summary.nsh
 	perl -p -e 's/\r?\n/\$$\\r\$$\\n/' install_summary.rtf >> install_summary.nsh
 	echo '"' >> install_summary.nsh
