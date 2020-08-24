@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  release:
+    types: [ created ]
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Build .deb file
+      - uses: ./.github/actions/build-deb
+        id: debian
+        name: Debian Package
+        with:
+          args: --unsigned-source --unsigned-changes --no-sign
+
+      # Build .pkg.tar.xz file
+      - uses: ./.github/actions/build-arch
+        name: ArchLinux Package
+        id: arch
+
+      # Build NSIS file
+      - uses: ./.github/actions/build-nsis
+        name: Windows Package
+        id: windows
+
+      # Publish artifacts to github tag.
+      - name: Publish to Github
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: '${{ steps.debian.outputs.filename }} ${{ steps.arch.outputs.filename }} ${{ steps.windows.outputs.filename }}'
