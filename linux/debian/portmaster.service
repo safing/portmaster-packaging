@@ -9,7 +9,7 @@ Wants=nss-lookup.target
 
 [Service]
 Type=simple
-Restart=always
+Restart=on-failure
 RestartSec=10
 LockPersonality=yes
 MemoryDenyWriteExecute=yes
