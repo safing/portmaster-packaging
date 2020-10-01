@@ -1,8 +1,14 @@
+portmaster (0.4.2.1) buster; urgency=low
+
+  * Fix Restart= stanza in systemd service unit
+
+ -- Safing <noc@safing.io> Thu, 01 Oct 2020 16:50:46 +0200
+
 portmaster (0.4.2.0) buster; urgency=low
 
   * Update to portmaster-start 0.4.2
 
- -- Safing <noc@safing.io> Wed, 05 Aug 2020 09:30:01 +200
+ -- Safing <noc@safing.io> Wed, 05 Aug 2020 09:30:01 +0200
 
 portmaster (0.4.1.3) buster; urgency=low
 
