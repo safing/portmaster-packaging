@@ -1,6 +1,6 @@
 # Maintainer: Patrick Pacher <patrick@safing.io>
 pkgname=portmaster
-pkgver=0.4.2
+pkgver=0.5.0
 pkgrel=1
 pkgdesc='Application Firewall: Block Mass Surveillance - Love Freedom'
 arch=('x86_64')
@@ -17,10 +17,10 @@ source=("portmaster-start::https://updates.safing.io/linux_amd64/start/portmaste
 		'./portmaster_logo.png'
 		"portmaster.service::file://$(pwd)/debian/portmaster.service")
 noextract=('portmaster-start')
-md5sums=('944cf556ca4b198834304f397ca978c1'
+md5sums=('2541793fb93e42a6ec69e36d735c7191'
   '19864fff9d542c427acb727636ac5390'
   'cebfc4aa5f12a1da9b9ebf70f26f0d6f'
-  'bd72c66922a3cdb089fa80daba1772f8'
+  'c5484dd4e42606f8141abdc4e04d5d61'
   '498ef8b7a6b8fb749eb78bc9c8ea272e')
 
 prepare() {
