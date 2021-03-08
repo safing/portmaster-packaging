@@ -8,9 +8,7 @@ id docker || (echo creating user docker; useradd docker)
 chown -R docker:docker .
 
 # Set PKGDEST to a location where user "docker" can write.
-export PKGDEST="/tmp/pkg"
-mkdir -p $PKGDEST
-chown -R docker:docker $PKGDEST
+export PKGDEST="."
 # Reset PKGEXT to it's default (it's different in the build-container).
 export PKGEXT=".pkg.tar.xz"
 
