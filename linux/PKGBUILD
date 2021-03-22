@@ -21,7 +21,7 @@ md5sums=('607a7d6adbd9bc95ff2e87f4754f6326'
   '19864fff9d542c427acb727636ac5390'
   'cebfc4aa5f12a1da9b9ebf70f26f0d6f'
   'c5484dd4e42606f8141abdc4e04d5d61'
-  'e0005d06c23e34a100b5f293ad485004')
+  'a568e92f6a6f219ded28d8bfd1d6e1f5')
 
 prepare() {
 	for res in 16 32 48 96 128 ; do
