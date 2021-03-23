@@ -1,3 +1,11 @@
+portmaster (0.5.2.0) buster; urgency=low
+
+  * Fix ExecStop directives that clean up iptables.
+  * Remove workaround that started systemd-resolved when stopping.
+  * Update to portmaster-start 0.5.2.
+
+ -- Safing <noc@safing.io> Mon, 08 Mar 2021 13:00:00 +0100
+
 portmaster (0.5.1.0) buster; urgency=low
 
   * Update to portmaster-start 0.5.1.

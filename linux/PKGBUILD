@@ -1,7 +1,7 @@
 # Maintainer: Patrick Pacher <patrick@safing.io>
 pkgname=portmaster
-pkgver=0.5.1
-pkgrel=3
+pkgver=0.5.2
+pkgrel=1
 pkgdesc='Application Firewall: Block Mass Surveillance - Love Freedom'
 arch=('x86_64')
 license=('AGPL3')
