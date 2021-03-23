@@ -182,6 +182,11 @@ dontUpdate:
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 		"NoModify" 1
 
+	; Start Portmaster Core Service and Notifier
+	DetailPrint "Starting Portmaster Core Service and Notifier ..."
+	Exec '"sc.exe" start PortmasterCore'
+	Exec '"$INSTDIR\${ExeName}" notifier --data=$InstDir'
+
 SectionEnd
 !endif
 
