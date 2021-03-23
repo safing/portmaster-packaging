@@ -163,12 +163,8 @@ dontUpdate:
 	${EndIf}
 
 	;Actually gets placed at HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster because NSIS is 32 Bit
-;WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
-;		"InstallDate" "" ; TODO
-;WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
-;		"EstimatedSize" 1
-;WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
-;		"DisplayVersion" 1 ; 
+	;WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
+	;	"InstallDate" "" ; TODO
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 		"DisplayName" "Portmaster"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
@@ -186,11 +182,11 @@ dontUpdate:
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 		"NoModify" 1
 
-	${If} ${IsWin10}
-		SetRegView 64
-		WriteRegDWORD HKLM "SYSTEM\CurrentControlSet\services\Dnscache" "Start" 4
-		SetRebootFlag true
-	${EndIf}
+	; Start Portmaster Core Service and Notifier
+	DetailPrint "Starting Portmaster Core Service and Notifier ..."
+	Exec '"sc.exe" start PortmasterCore'
+	Exec '"$INSTDIR\${ExeName}" notifier --data=$InstDir'
+
 SectionEnd
 !endif
 
@@ -218,12 +214,6 @@ Section Un.Portmaster SectionPortmaster
 	
 	DeleteRegKey HKLM "SOFTWARE\Classes\CLSID\{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}\LocalServer32"
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster"
-
-	${If} ${IsWin10}
-		SetRegView 64
-		WriteRegDWORD HKLM "SYSTEM\CurrentControlSet\services\Dnscache" "Start" 2 ; start DNSCache again (on reboot)
-		SetRebootFlag true
-	${EndIf}
 	
 	Delete "${ProgrammFolderLink}"
 	RMDir "${Parent_ProgrammFolderLink}"

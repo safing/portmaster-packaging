@@ -1,16 +1,18 @@
 # Note: Built for execution in container .github/actions/build-nsis
 
-STARTURL ?= https://updates.safing.io/latest/windows_amd64/start/portmaster-start.exe\?client=Github
+STARTURL ?= https://updates.safing.io/latest/windows_amd64/start/portmaster-start.exe
 
 all: portmaster-uninstaller.exe portmaster-installer.exe
+
+wine-setup:
+	which sudo && sudo chown -R $$(id -u):$$(id -g) $(WINEPREFIX) || true
 
 portmaster-start.exe:
 	curl --fail --user-agent GitHub -o portmaster-start.exe $(STARTURL)
 
-portmaster-uninstaller.exe: portmaster-installer.nsi install_summary.nsh
-	echo hi
+portmaster-uninstaller.exe: wine-setup portmaster-installer.nsi install_summary.nsh
 	makensis -DUNINSTALLER portmaster-installer.nsi
-	WINEPREFIX=/tmp wine ./uninstaller_pkg.exe
+	wine ./uninstaller_pkg.exe
 ifdef SIGN
 	@echo -e "If wanted, sign now (on Windows) using:\nsign.bat portmaster-uninstaller.exe\npress enter to continue"
 	@read x
@@ -21,7 +23,7 @@ install_summary.nsh: install_summary.rtf
 	perl -p -e 's/\r?\n/\$$\\r\$$\\n/' install_summary.rtf >> install_summary.nsh
 	echo '"' >> install_summary.nsh
 
-portmaster-installer.exe: portmaster-start.exe portmaster-installer.nsi portmaster-uninstaller.exe install_summary.nsh
+portmaster-installer.exe: wine-setup portmaster-start.exe portmaster-installer.nsi portmaster-uninstaller.exe install_summary.nsh
 	makensis -DINSTALLER -DPRODUCTION portmaster-installer.nsi #Production enables good compression (takes longer)
 ifdef SIGN
 	@echo -e "If wanted, sign now (on Windows) using:\nsign.bat portmaster-installer.exe\npress enter to continue"
