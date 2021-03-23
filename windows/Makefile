@@ -5,7 +5,7 @@ STARTURL ?= https://updates.safing.io/latest/windows_amd64/start/portmaster-star
 all: portmaster-uninstaller.exe portmaster-installer.exe
 
 wine-setup:
-	sudo chown -R $$(id -u):$$(id -g) $(WINEPREFIX)
+	which sudo && sudo chown -R $$(id -u):$$(id -g) $(WINEPREFIX) || true
 
 portmaster-start.exe:
 	curl --fail --user-agent GitHub -o portmaster-start.exe $(STARTURL)
