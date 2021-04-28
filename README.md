@@ -1,3 +1,5 @@
+> **Check out the main project repository [safing/portmaster](https://github.com/safing/portmaster)**
+
 # Portmaster Packaging
 
 This repo holds the source for Portmaster installers and packages for different platforms. Due to complex signing requirements, this repo is currently not built in CI/CD.
