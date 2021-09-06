@@ -33,19 +33,19 @@ prepare() {
 
 build() {
 	mkdir -p ${pkgname}-${pkgver}/data
-	chmod a+x ${srcdir}/portmaster-start
-	${srcdir}/portmaster-start --data ${pkgname}-${pkgver}/data update
+	chmod a+x "${srcdir}/portmaster-start"
+	"${srcdir}/portmaster-start" --data ${pkgname}-${pkgver}/data update
 }
 
 package() {
-	mkdir -p ${pkgdir}/var/lib/portmaster
-	mkdir -p ${pkgdir}/usr/lib/systemd/system
-	mkdir -p ${pkgdir}/usr/share/icons/hicolor/
-	mkdir -p ${pkgdir}/usr/share/applications/
-	cp ${srcdir}/portmaster.service ${pkgdir}/usr/lib/systemd/system/portmaster.service
-	cp ${srcdir}/portmaster-start ${pkgdir}/var/lib/portmaster/
-	cp -r ${srcdir}/${pkgname}-${pkgver}/data/* ${pkgdir}/var/lib/portmaster/
-	cp -r ${srcdir}/${pkgname}-${pkgver}/icons/* ${pkgdir}/usr/share/icons/hicolor/
-	cp ${srcdir}/portmaster.desktop ${pkgdir}/usr/share/applications/
-	cp ${srcdir}/portmaster_notifier.desktop ${pkgdir}/usr/share/applications/
+	install -dm 755 "${pkgdir}/var/lib/portmaster/"
+	install -dm 755 "${pkgdir}/usr/lib/systemd/system/"
+	install -dm 755 "${pkgdir}/usr/share/icons/hicolor/"
+	install -dm 755 "${pkgdir}/usr/share/applications/"
+	cp "${srcdir}/portmaster.service" "${pkgdir}/usr/lib/systemd/system/portmaster.service"
+	cp "${srcdir}/portmaster-start" "${pkgdir}/var/lib/portmaster/"
+	cp -r "${srcdir}/${pkgname}-${pkgver}/data/"* "${pkgdir}/var/lib/portmaster/"
+	cp -r "${srcdir}/${pkgname}-${pkgver}/icons/"* "${pkgdir}/usr/share/icons/hicolor/"
+	cp "${srcdir}/portmaster.desktop" "${pkgdir}/usr/share/applications/"
+	cp "${srcdir}/portmaster_notifier.desktop" "${pkgdir}/usr/share/applications/"
 }
