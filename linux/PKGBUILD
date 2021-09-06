@@ -12,10 +12,10 @@ optdepends=('libappindicator-gtk3: for systray indicator')
 options=('!strip')
 #changelog=
 source=("portmaster-start::https://updates.safing.io/linux_amd64/start/portmaster-start_v${pkgver//./-}"
-		'./portmaster.desktop'
-		'./portmaster_notifier.desktop'
-		'./portmaster_logo.png'
-		"portmaster.service::file://$(pwd)/debian/portmaster.service")
+		'portmaster.desktop'
+		'portmaster_notifier.desktop'
+		'portmaster_logo.png'
+		"debian/portmaster.service")
 noextract=('portmaster-start')
 md5sums=('e267b0b2913fc84babcd805264b2d0f7'
          '19864fff9d542c427acb727636ac5390'
