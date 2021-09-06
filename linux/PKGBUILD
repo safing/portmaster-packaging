@@ -38,14 +38,13 @@ build() {
 }
 
 package() {
+	install -Dm 644 "${srcdir}/portmaster.service" "${pkgdir}/usr/lib/systemd/system/portmaster.service"
+	install -Dm 755 "${srcdir}/portmaster-start" "${pkgdir}/var/lib/portmaster/portmaster-start"
+	install -Dm 644 "${srcdir}/portmaster.desktop" "${pkgdir}/usr/share/applications/portmaster.desktop"
+	install -Dm 644 "${srcdir}/portmaster_notifier.desktop" "${pkgdir}/usr/share/applications/portmaster_notifier.desktop"
+
 	install -dm 755 "${pkgdir}/var/lib/portmaster/"
-	install -dm 755 "${pkgdir}/usr/lib/systemd/system/"
 	install -dm 755 "${pkgdir}/usr/share/icons/hicolor/"
-	install -dm 755 "${pkgdir}/usr/share/applications/"
-	cp "${srcdir}/portmaster.service" "${pkgdir}/usr/lib/systemd/system/portmaster.service"
-	cp "${srcdir}/portmaster-start" "${pkgdir}/var/lib/portmaster/"
 	cp -r "${srcdir}/${pkgname}-${pkgver}/data/"* "${pkgdir}/var/lib/portmaster/"
 	cp -r "${srcdir}/${pkgname}-${pkgver}/icons/"* "${pkgdir}/usr/share/icons/hicolor/"
-	cp "${srcdir}/portmaster.desktop" "${pkgdir}/usr/share/applications/"
-	cp "${srcdir}/portmaster_notifier.desktop" "${pkgdir}/usr/share/applications/"
 }
