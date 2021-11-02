@@ -111,9 +111,7 @@ Section "Install"
 	${If} ${IsWin10}
 		; do nothing
 	${ElseIf} ${AtLeastWin10}
-		MessageBox MB_ICONEXCLAMATION "This Windows Version is not supported. The Portmaster cannot be installed"
-		SetErrors
-		Abort
+		MessageBox MB_ICONEXCLAMATION "This Windows Version is not supported. The Portmaster will likely not work as expected!"
 	${EndIf}
 	
 	
