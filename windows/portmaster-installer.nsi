@@ -68,7 +68,7 @@ Function fnc_PageSummary_Show
 	${If} $0 == error
 		Abort
 	${EndIf}
-	!insertmacro MUI_HEADER_TEXT "Summary" "A summary of all that will be installed"
+	!insertmacro MUI_HEADER_TEXT "Install Summary" ""
 
 	nsDialogs::CreateControl "RichEdit20A"	${ES_READONLY}|${WS_VISIBLE}|${WS_CHILD}|${WS_TABSTOP}|${WS_VSCROLL}|${ES_MULTILINE}|${ES_WANTRETURN} ${WS_EX_STATICEDGE} 0 0 100% 119u ''
 	Pop $0
@@ -83,7 +83,7 @@ Function fnc_PageFinish_Show
 	${If} $0 == error
 		Abort
 	${EndIf}
-	!insertmacro MUI_HEADER_TEXT "Installation successfull" ""
+	!insertmacro MUI_HEADER_TEXT "Install Successfull" ""
 
 	nsDialogs::CreateControl "RichEdit20A"	${ES_READONLY}|${WS_VISIBLE}|${WS_CHILD}|${WS_TABSTOP}|${WS_VSCROLL}|${ES_MULTILINE}|${ES_WANTRETURN} ${WS_EX_STATICEDGE} 0 0 100% 119u ''
 	Pop $0
@@ -146,24 +146,24 @@ dontUpdate:
 	!insertmacro ShortcutSetToastProperties "$SMPROGRAMS\Portmaster\Portmaster.lnk" "{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}" "io.safing.portmaster"
 	pop $0
 	${If} $0 <> 0
-		MessageBox MB_ICONEXCLAMATION "Shortcut-Attributes to enable Toast Messages couldn't be set"
+		MessageBox MB_ICONEXCLAMATION "Shortcut-Attributes to enable Toast Messages could not be set"
 		SetErrors
 		Abort
 	${EndIf}
-	DetailPrint "Returncode when setting Shortcut: $0 (0: S_OK)"
+	DetailPrint "Sucessfully added Shortcut-Attributes for Toast Messages. Return Code: $0 (0: S_OK)"
 
 	WriteRegStr HKLM "SOFTWARE\Classes\CLSID\{7F00FB48-65D5-4BA8-A35B-F194DA7E1A51}\LocalServer32" "" '"$INSTDIR\${ExeName}" notifier-snoretoast'
 
 ; prepare directory structure
-	DetailPrint "Preparing installation directory ..."
 	nsExec::ExecToStack '$INSTDIR\${ExeName} clean-structure --data=$InstDir'
 	pop $0
 	pop $1
 	; we ignore the error here as a reboot is suggested anyway and that will
 	; fix the above error as well.
+	DetailPrint "Prepared the installation directory."
 
 ; download
-	DetailPrint "Downloading Portmaster modules, this may take a while ..."
+	DetailPrint "Downloading Portmaster (~300MB), depending on download speeds this may take a while ..."
 	nsExec::ExecToStack '$INSTDIR\${ExeName} update --data=$InstDir'
 	pop $0
 	pop $1
@@ -173,9 +173,9 @@ dontUpdate:
 		SetErrors
 		Abort
 	${EndIf}
+	DetailPrint "Sucessfully downloaded Portmaster."
 
 ; register Service
-	DetailPrint "Installing Portmaster as a Windows Service ..."
 	nsExec::ExecToStack '$INSTDIR\${ExeName} install core-service --data=$InstDir'
 	pop $0
 	pop $1
@@ -185,6 +185,7 @@ dontUpdate:
 		SetErrors
 		Abort
 	${EndIf}
+	DetailPrint "Successfully registered Portmaster as a Windows Service."
 
 	;Actually gets placed at HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster because NSIS is 32 Bit
 	;WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
@@ -226,7 +227,7 @@ Section Un.Portmaster SectionPortmaster
 	pop $1
 	DetailPrint $1
 	${If} $0 <> 0
-		MessageBox MB_ICONEXCLAMATION "Deleting Service was unsuccessfull, see Details"
+		MessageBox MB_ICONEXCLAMATION "Deleting service was unsuccessfull, see details."
 		SetErrors
 		Abort
 	${EndIf}
@@ -250,7 +251,7 @@ Section Un.Data SectionData
 SectionEnd
 
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN
-!insertmacro MUI_DESCRIPTION_TEXT ${SectionData} "Settings, profiles, logs and any other data generated, downloaded or governed by Portmaster. Please create backups of any valuable data before uninstalling."
-!insertmacro MUI_DESCRIPTION_TEXT ${SectionPortmaster} "All program components, including downloaded updates. Removes system integrations such as shortcuts, registry keys or services."
+!insertmacro MUI_DESCRIPTION_TEXT ${SectionData} "Permanently delete all user-configured global settings and application settings, as well as logs and caches."
+!insertmacro MUI_DESCRIPTION_TEXT ${SectionPortmaster} "Uninstall Portmaster from Windows and remove system integrations such as shortcuts, registry keys and services."
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_END
 !endif
