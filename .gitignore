@@ -8,3 +8,5 @@
 /linux/debian/portmaster/
 *.exe
 /windows/install_summary.nsh
+/windows/install_finish.nsh
+/windows/.wine
