@@ -1,5 +1,5 @@
 portmaster_notifier.desktop /etc/xdg/autostart/
-portmaster-start /var/lib/portmaster
+portmaster-start /opt/safing/portmaster
 portmaster.desktop /usr/share/applications/
 portmaster_notifier.desktop /usr/share/applications/
 icons/32/portmaster.png /usr/share/pixmaps/
