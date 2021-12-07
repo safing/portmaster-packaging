@@ -5,6 +5,7 @@ Documentation=https://docs.safing.io
 Before=nss-lookup.target network.target shutdown.target
 After=systemd-networkd.service
 Conflicts=shutdown.target
+Conflicts=firewalld.service
 Wants=nss-lookup.target
 
 [Service]
@@ -20,7 +21,7 @@ Environment=LOGLEVEL=info
 Environment=PORTMASTER_ARGS=
 EnvironmentFile=-/etc/default/portmaster
 ProtectSystem=true
-#ReadWritePaths=/opt/safing/portmaster
+#ReadWritePaths=/var/lib/portmaster
 #ReadWritePaths=/run/xtables.lock
 RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET AF_INET6
 RestrictNamespaces=yes
@@ -35,19 +36,10 @@ PrivateDevices=yes
 AmbientCapabilities=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_net_broadcast cap_net_raw cap_sys_module cap_sys_ptrace cap_dac_override
 CapabilityBoundingSet=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_net_broadcast cap_net_raw cap_sys_module cap_sys_ptrace cap_dac_override
 SystemCallArchitectures=native
-#
-# Seems like at least Mint19 does not have the system-service
-# call group so we leave that feature disabled for now.
-#
-#SystemCallFilter=@system-service @module
-#SystemCallErrorNumber=EPERM
-ExecStart=/opt/safing/portmaster/portmaster-start --data /opt/safing/portmaster core -- --log $LOGLEVEL $PORTMASTER_ARGS
-ExecStopPost=-/sbin/iptables -F C17
-ExecStopPost=-/sbin/iptables -t mangle -F C170
-ExecStopPost=-/sbin/iptables -t mangle -F C171
-ExecStopPost=-/sbin/ip6tables -F C17
-ExecStopPost=-/sbin/ip6tables -t mangle -F C170
-ExecStopPost=-/sbin/ip6tables -t mangle -F C171
+SystemCallFilter=@system-service @module
+SystemCallErrorNumber=EPERM
+ExecStart=/opt/safing/portmaster/portmaster-start --data /opt/safing/portmaster core -- $PORTMASTER_ARGS
+ExecStopPost=-/opt/safing/portmaster/portmaster-start recover-iptables
 
 [Install]
 WantedBy=multi-user.target

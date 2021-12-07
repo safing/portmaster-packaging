@@ -1,0 +1,190 @@
+name: Build, Lint and Test
+on: push
+
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          ignore: templates tests
+
+  build:
+    name: Build artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install nfpm@latest
+        run: curl -o /tmp/nfpm.tar.gz -sSL https://github.com/goreleaser/nfpm/releases/download/v2.7.1/nfpm_2.7.1_Linux_x86_64.tar.gz && cd /tmp && tar xf /tmp/nfpm.tar.gz && sudo mv nfpm /usr/local/bin && sudo chmod a+x /usr/local/bin/nfpm
+
+      - name: Install gomplate
+        run: sudo curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.10.0/gomplate_linux-amd64 && sudo chmod +x /usr/local/bin/gomplate
+
+      - name: Build packages
+        run: make all
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: portmaster-current
+          path: dist/*
+
+      - name: Build with next pkgrev
+        run: make clean && make increase-pkgrev && make all
+
+      - name: Upload artifacts with next pkgrev
+        uses: actions/upload-artifact@v2
+        with:
+          name: portmaster-next
+          path: dist/*
+
+  test-ubuntu:
+    name: Test DEB package (ubuntu VM)
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: portmaster-current
+
+      - name: Install tooling
+        run: sudo bash -c "apt-get update && apt-get install -y systemd desktop-file-utils"
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Install dependencies
+        run: sudo apt-get install -y libnetfilter-queue1 ca-certificates
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Install deb package
+        run: yes | sudo dpkg -i ./portmaster_*.deb
+
+      - uses: actions/checkout@v2
+      - name: Verify installation
+        run: ./tests/test-install.sh
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: portmaster-next
+          path: ./next
+
+      - name: "Upgrade to next pkgrev"
+        run: yes | sudo dpkg -i ./next/portmaster_*.deb || ls -R
+
+      - name: Verify upgrade
+        run: ./tests/test-upgrade.sh
+
+      - name: Uninstall portmaster
+        run: sudo apt-get remove -y portmaster
+
+      - name: Verify uninstallation
+        run: ./tests/test-uninstall.sh
+
+  test-deb:
+    name: Test DEB package
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        container:
+          - hugojosefson/popos
+          - ubuntu:latest
+          - ubuntu:rolling
+          - ubuntu:xenial
+          - debian:stable
+          - debian:unstable
+          - debian:oldstable
+          - debian:testing
+          - linuxmintd/mint20-amd64
+          - linuxmintd/mint19-amd64
+    needs: build
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: portmaster-current
+
+      - name: Install tooling
+        run: sudo bash -c "apt-get update && apt-get install -y systemd desktop-file-utils"
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Install dependencies
+        run: sudo apt-get install -y libnetfilter-queue1 ca-certificates
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Install deb package
+        run: yes | sudo dpkg -i ./portmaster_*.deb
+
+      - uses: actions/checkout@v2
+      - name: Verify installation
+        run: sudo ./tests/test-install.sh
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: portmaster-next
+          path: ./next
+
+      - name: "Upgrade to next pkgrev"
+        run: yes | sudo dpkg -i ./next/portmaster_*.deb
+
+      - name: Verify upgrade
+        run: ./tests/test-upgrade.sh
+
+      - name: Uninstall portmaster
+        run: sudo apt-get remove -y portmaster
+
+      - name: Verify uninstallation
+        run: ./tests/test-uninstall.sh
+
+  test-rpm:
+    name: Test RPM package
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        container:
+          - fedora:32
+          - fedora:33
+          - fedora:34
+          - centos:7
+          - centos:8
+    container: ${{ matrix.container }}
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: portmaster-current
+
+      - name: Install tooling
+        run: yum install -y systemd desktop-file-utils procps-ng
+
+      # we use yum localinstall instead of dnf install because
+      # not all tested distro versions have dnf available and those
+      # that have dnf have it aliased as yum.
+      - name: Install package
+        run: yum localinstall -y ./portmaster-*.rpm
+
+      - uses: actions/checkout@v2
+      - name: Verify installation
+        run: ./tests/test-install.sh
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: portmaster-next
+          path: ./next
+
+      - name: "Upgrade to next pkgrev"
+        run: yum localinstall -y ./next/portmaster-*.rpm
+
+      - name: Verify upgrade
+        run: ./tests/test-upgrade.sh
+
+      - name: Uninstall portmaster
+        run: yum remove -y portmaster
+
+      - name: Verify uninstallation
+        run: ./tests/test-uninstall.sh

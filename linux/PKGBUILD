@@ -1,51 +1,55 @@
-# Maintainer: Patrick Pacher <patrick@safing.io>
-pkgname=portmaster
-pkgver=0.5.2
+# Maintainer: Safing ICS Technologies <noc@safing.io>
+#
+# Application Firewall: Block Mass Surveillance - Love Freedom
+# The Portmaster enables you to protect your data on your device. You
+# are back in charge of your outgoing connections: you choose what data
+# you share and what data stays private. Read more on docs.safing.io.
+#
+pkgname=portmaster-bin
+pkgver=0.7.0
 pkgrel=1
 pkgdesc='Application Firewall: Block Mass Surveillance - Love Freedom'
 arch=('x86_64')
+url='https://safing.io/portmaster'
 license=('AGPL3')
-install=arch.install
-depends=('libnetfilter_queue' 'webkit2gtk')
+depends=('libnetfilter_queue')
 makedepends=('imagemagick') # for convert
 optdepends=('libappindicator-gtk3: for systray indicator')
 options=('!strip')
-#changelog=
+provides=('portmaster')
+conflicts=('portmaster')
+install=arch.install
 source=("portmaster-start::https://updates.safing.io/linux_amd64/start/portmaster-start_v${pkgver//./-}"
-		'./portmaster.desktop'
-		'./portmaster_notifier.desktop'
-		'./portmaster_logo.png'
-		"portmaster.service::file://$(pwd)/debian/portmaster.service")
+		'portmaster.desktop'
+		'portmaster_notifier.desktop'
+		'portmaster_logo.png'
+		"portmaster.service")
 noextract=('portmaster-start')
-md5sums=('e267b0b2913fc84babcd805264b2d0f7'
-         '19864fff9d542c427acb727636ac5390'
-         'cebfc4aa5f12a1da9b9ebf70f26f0d6f'
-         'c5484dd4e42606f8141abdc4e04d5d61'
-         'a568e92f6a6f219ded28d8bfd1d6e1f5')
+sha256sums=('6ade636aaf2b608f251972fd98b25a8020b301023a6377e5275de5195a132e7f'
+         '7b0c03e4552dd86caeff2d628b13346cfe70a646af11abac6555e348e46c28da'
+         '490b586f185218fdd947e8f12aa2dc412d78d89c8ce9b8ef5a75cb2e5ffb94ae'
+         'ecb02625952594af86d3b53762363c1e227c2b9604fc9c9423682fc87a92a957'
+         'ab64bed0d7300b21a5d594fc94cf491e7782febf5faf90cd18ffe00b9fd9144b')
 
 prepare() {
 	for res in 16 32 48 96 128 ; do
-		local iconpath=${pkgname}-${pkgver}/icons/${res}x${res}/apps
-		mkdir -p ${iconpath} ; 
-		convert ./portmaster_logo.png -resize ${res}x${res} ${iconpath}/portmaster.png ; 
+		local iconpath="${srcdir}/icons/${res}x${res}/"
+		mkdir -p "${iconpath}" ; 
+		convert ./portmaster_logo.png -resize "${res}x${res}" "${iconpath}/portmaster.png" ; 
 	done
 }
 
-build() {
-	mkdir -p ${pkgname}-${pkgver}/data
-	chmod a+x ${srcdir}/portmaster-start
-	${srcdir}/portmaster-start --data ${pkgname}-${pkgver}/data update
-}
-
 package() {
-	mkdir -p ${pkgdir}/var/lib/portmaster
-	mkdir -p ${pkgdir}/usr/lib/systemd/system
-	mkdir -p ${pkgdir}/usr/share/icons/hicolor/
-	mkdir -p ${pkgdir}/usr/share/applications/
-	cp ${srcdir}/portmaster.service ${pkgdir}/usr/lib/systemd/system/portmaster.service
-	cp ${srcdir}/portmaster-start ${pkgdir}/var/lib/portmaster/
-	cp -r ${srcdir}/${pkgname}-${pkgver}/data/* ${pkgdir}/var/lib/portmaster/
-	cp -r ${srcdir}/${pkgname}-${pkgver}/icons/* ${pkgdir}/usr/share/icons/hicolor/
-	cp ${srcdir}/portmaster.desktop ${pkgdir}/usr/share/applications/
-	cp ${srcdir}/portmaster_notifier.desktop ${pkgdir}/usr/share/applications/
+    install -Dm 0755 "${srcdir}/portmaster-start" "${pkgdir}/opt/safing/portmaster/portmaster-start"
+    install -Dm 0644 "${srcdir}/portmaster.desktop" "${pkgdir}/opt/safing/portmaster/portmaster.desktop"
+    install -Dm 0644 "${srcdir}/portmaster_notifier.desktop" "${pkgdir}/opt/safing/portmaster/portmaster_notifier.desktop"
+    install -dm 0755 "${pkgdir}/etc/xdg/autostart"
+    ln -s "/opt/safing/portmaster/portmaster_notifier.desktop" "${pkgdir}/etc/xdg/autostart/portmaster_notifier.desktop"
+    install -Dm 0644 "${srcdir}/portmaster.service" "${pkgdir}/opt/safing/portmaster/portmaster.service"
+    install -Dm 0644 "${srcdir}/icons/32x32/portmaster.png" "${pkgdir}/usr/share/pixmaps/portmaster.png"
+    install -Dm 0644 "${srcdir}/icons/16x16/portmaster.png" "${pkgdir}/usr/share/icons/hicolor/16x16/apps/portmaster.png"
+    install -Dm 0644 "${srcdir}/icons/32x32/portmaster.png" "${pkgdir}/usr/share/icons/hicolor/32x32/apps/portmaster.png"
+    install -Dm 0644 "${srcdir}/icons/48x48/portmaster.png" "${pkgdir}/usr/share/icons/hicolor/48x48/apps/portmaster.png"
+    install -Dm 0644 "${srcdir}/icons/96x96/portmaster.png" "${pkgdir}/usr/share/icons/hicolor/96x96/apps/portmaster.png"
+    install -Dm 0644 "${srcdir}/icons/128x128/portmaster.png" "${pkgdir}/usr/share/icons/hicolor/128x128/apps/portmaster.png"
 }
