@@ -15,7 +15,7 @@ jobs:
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
         with:
-          ignore: windows linux/templates linux/tests
+          ignore_paths: windows linux/templates linux/tests
 
   build:
     name: Build artifacts
