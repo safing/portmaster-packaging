@@ -1,5 +1,10 @@
-name: Build, Lint and Test
-on: push
+name: Linux
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   shellcheck:
@@ -8,10 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run ShellCheck
-        working-directory: linux
         uses: ludeeus/action-shellcheck@master
         with:
           ignore: templates tests
+        working-directory: linux
 
   build:
     name: Build artifacts
