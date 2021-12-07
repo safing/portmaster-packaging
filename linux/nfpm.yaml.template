@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=./schema.json
+name: "portmaster"
+arch: "amd64"
+platform: "linux"
+version: # set by make template
+section: "default"
+priority: "extra"
+maintainer: "Safing ICS Technologies <noc@safing.io>"
+description: |
+ Application Firewall: Block Mass Surveillance - Love Freedom
+ The Portmaster enables you to protect your data on your device. You
+ are back in charge of your outgoing connections: you choose what data
+ you share and what data stays private. Read more on docs.safing.io.
+vendor: "Safing ICS Technologies"
+homepage: "https://safing.io"
+license: "AGPL"
+#changelog: "changelog.yaml"
+contents:
+- src: portmaster-start
+  dst: /opt/safing/portmaster/portmaster-start
+  file_info:
+    mode: 0755
+
+- src: portmaster.desktop
+  dst: /opt/safing/portmaster/portmaster.desktop
+
+- src: /opt/safing/portmaster/portmaster.desktop
+  dst: /usr/share/applications/portmaster.desktop
+  type: ghost
+
+- src: portmaster_notifier.desktop
+  dst: /opt/safing/portmaster/portmaster_notifier.desktop
+
+- src: portmaster_notifier.desktop
+  dst: /usr/share/applications/portmaster_notifier.desktop
+  type: ghost
+
+- src: /opt/safing/portmaster/portmaster_notifier.desktop
+  dst: /etc/xdg/autostart/portmaster_notifier.desktop
+  type: symlink
+
+- src: portmaster.service
+  dst: /opt/safing/portmaster/portmaster.service
+- src: portmaster.service
+  dst: /lib/systemd/system/portmaster.service
+  type: ghost
+
+#
+# Icons
+#
+- src: icons/32x32/portmaster.png 
+  dst: /usr/share/pixmaps/portmaster.png
+- src: icons/16x16/portmaster.png 
+  dst: /usr/share/icons/hicolor/16x16/apps/portmaster.png
+- src: icons/32x32/portmaster.png 
+  dst: /usr/share/icons/hicolor/32x32/apps/portmaster.png
+- src: icons/48x48/portmaster.png 
+  dst: /usr/share/icons/hicolor/48x48/apps/portmaster.png
+- src: icons/96x96/portmaster.png 
+  dst: /usr/share/icons/hicolor/96x96/apps/portmaster.png
+- src: icons/128x128/portmaster.png
+  dst: /usr/share/icons/hicolor/128x128/apps/portmaster.png
+scripts:
+  preinstall: ./scripts/preinstall.sh
+  postinstall: ./scripts/postinstall.sh
+  preremove: ./scripts/preremove.sh
+  postremove: ./scripts/postremove.sh
+
+overrides:
+  deb:
+    depends: 
+      - libc6
+      - libnetfilter-queue1
+    recommends:
+      - libappindicator3-1
+#      - gir1.2-harfbuzz-0.0
+  rpm:
+    depends:
+      - glibc-devel
+      - libnetfilter_queue
+    recommends:
+      - libappindicator
+    suggests:
+      # Gnome-40 does not provide a systray anymore by default
+      # The following extension re-adds support for appindicator
+      # Note: users must still configure and enable the extension,
+      # theres nothing we can do.
+      - gnome-shell-extension-appindicator
+
+rpm:
+  # The package group. This option is deprecated by most distros
+  # but required by old distros like CentOS 5 / EL 5 and earlier.
+  group: Unspecified
+
+deb:
+  scripts:
+    rules: ./scripts/rules
+  triggers:
+    activate:
+      - update-icon-caches
+      - update-desktop-database
