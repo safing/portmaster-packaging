@@ -8,6 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run ShellCheck
+        working-directory: linux
         uses: ludeeus/action-shellcheck@master
         with:
           ignore: templates tests
@@ -26,21 +27,25 @@ jobs:
 
       - name: Build packages
         run: make all
+        working-directory: linux
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: portmaster-current
           path: dist/*
+        working-directory: linux
 
       - name: Build with next pkgrev
         run: make clean && make increase-pkgrev && make all
+        working-directory: linux
 
       - name: Upload artifacts with next pkgrev
         uses: actions/upload-artifact@v2
         with:
           name: portmaster-next
           path: dist/*
+        working-directory: linux
 
   test-ubuntu:
     name: Test DEB package (ubuntu VM)
@@ -50,6 +55,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: portmaster-current
+        working-directory: linux
 
       - name: Install tooling
         run: sudo bash -c "apt-get update && apt-get install -y systemd desktop-file-utils"
@@ -63,27 +69,33 @@ jobs:
 
       - name: Install deb package
         run: yes | sudo dpkg -i ./portmaster_*.deb
+        working-directory: linux
 
       - uses: actions/checkout@v2
       - name: Verify installation
         run: ./tests/test-install.sh
+        working-directory: linux
 
       - uses: actions/download-artifact@v2
         with:
           name: portmaster-next
           path: ./next
+        working-directory: linux
 
       - name: "Upgrade to next pkgrev"
         run: yes | sudo dpkg -i ./next/portmaster_*.deb || ls -R
+        working-directory: linux
 
       - name: Verify upgrade
         run: ./tests/test-upgrade.sh
+        working-directory: linux
 
       - name: Uninstall portmaster
         run: sudo apt-get remove -y portmaster
 
       - name: Verify uninstallation
         run: ./tests/test-uninstall.sh
+        working-directory: linux
 
   test-deb:
     name: Test DEB package
@@ -106,6 +118,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: portmaster-current
+        working-directory: linux
 
       - name: Install tooling
         run: sudo bash -c "apt-get update && apt-get install -y systemd desktop-file-utils"
@@ -119,27 +132,33 @@ jobs:
 
       - name: Install deb package
         run: yes | sudo dpkg -i ./portmaster_*.deb
+        working-directory: linux
 
       - uses: actions/checkout@v2
       - name: Verify installation
         run: sudo ./tests/test-install.sh
+        working-directory: linux
 
       - uses: actions/download-artifact@v2
         with:
           name: portmaster-next
           path: ./next
+        working-directory: linux
 
       - name: "Upgrade to next pkgrev"
         run: yes | sudo dpkg -i ./next/portmaster_*.deb
+        working-directory: linux
 
       - name: Verify upgrade
         run: ./tests/test-upgrade.sh
+        working-directory: linux
 
       - name: Uninstall portmaster
         run: sudo apt-get remove -y portmaster
 
       - name: Verify uninstallation
         run: ./tests/test-uninstall.sh
+        working-directory: linux
 
   test-rpm:
     name: Test RPM package
@@ -158,6 +177,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: portmaster-current
+        working-directory: linux
 
       - name: Install tooling
         run: yum install -y systemd desktop-file-utils procps-ng
@@ -167,24 +187,30 @@ jobs:
       # that have dnf have it aliased as yum.
       - name: Install package
         run: yum localinstall -y ./portmaster-*.rpm
+        working-directory: linux
 
       - uses: actions/checkout@v2
       - name: Verify installation
         run: ./tests/test-install.sh
+        working-directory: linux
 
       - uses: actions/download-artifact@v2
         with:
           name: portmaster-next
           path: ./next
+        working-directory: linux
 
       - name: "Upgrade to next pkgrev"
         run: yum localinstall -y ./next/portmaster-*.rpm
+        working-directory: linux
 
       - name: Verify upgrade
         run: ./tests/test-upgrade.sh
+        working-directory: linux
 
       - name: Uninstall portmaster
         run: yum remove -y portmaster
 
       - name: Verify uninstallation
         run: ./tests/test-uninstall.sh
+        working-directory: linux
