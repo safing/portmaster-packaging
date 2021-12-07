@@ -5,6 +5,6 @@ cd windows
 
 make
 
-mv *.exe ../
+mv ./*.exe ../
 filename='portmaster-installer.exe'
 echo ::set-output name=filename::$filename
