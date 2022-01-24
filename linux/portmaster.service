@@ -35,9 +35,9 @@ ProtectControlGroups=yes
 PrivateDevices=yes
 AmbientCapabilities=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_net_broadcast cap_net_raw cap_sys_module cap_sys_ptrace cap_dac_override
 CapabilityBoundingSet=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_net_broadcast cap_net_raw cap_sys_module cap_sys_ptrace cap_dac_override
-SystemCallArchitectures=native
-SystemCallFilter=@system-service @module
-SystemCallErrorNumber=EPERM
+# SystemCallArchitectures=native
+# SystemCallFilter=@system-service @module
+# SystemCallErrorNumber=EPERM
 ExecStart=/opt/safing/portmaster/portmaster-start --data /opt/safing/portmaster core -- $PORTMASTER_ARGS
 ExecStopPost=-/opt/safing/portmaster/portmaster-start recover-iptables
 
