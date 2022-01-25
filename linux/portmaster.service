@@ -25,7 +25,6 @@ ProtectSystem=true
 #ReadWritePaths=/run/xtables.lock
 RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET AF_INET6
 RestrictNamespaces=yes
-RestrictSUIDSGID=yes
 # In future version portmaster will require access to user home
 # directories to verify application permissions.
 ProtectHome=read-only
@@ -33,8 +32,8 @@ ProtectKernelTunables=yes
 ProtectKernelLogs=yes
 ProtectControlGroups=yes
 PrivateDevices=yes
-AmbientCapabilities=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_net_broadcast cap_net_raw cap_sys_module cap_sys_ptrace cap_dac_override
-CapabilityBoundingSet=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_net_broadcast cap_net_raw cap_sys_module cap_sys_ptrace cap_dac_override
+AmbientCapabilities=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_net_broadcast cap_net_raw cap_sys_module cap_sys_ptrace cap_dac_override cap_fowner cap_fsetid
+CapabilityBoundingSet=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_net_broadcast cap_net_raw cap_sys_module cap_sys_ptrace cap_dac_override cap_fowner cap_fsetid
 # SystemCallArchitectures=native
 # SystemCallFilter=@system-service @module
 # SystemCallErrorNumber=EPERM
