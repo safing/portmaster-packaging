@@ -18,12 +18,6 @@ installSystemdSupport() {
             changed="True"
         fi
 
-        # SystemCallFilter groups are added in 231 so make sure we comment it out
-        if [ "${systemd_version}" -lt 231 ]; then
-            sed -i "s/^SystemCall/#SystemCall/g" /opt/safing/portmaster/portmaster.service ||:
-            changed="True"
-        fi
-
         if [ "${changed}" = "True" ] && [ "$1" = "upgrade" ]; then
             systemctl daemon-reload ||:
         fi
