@@ -1,5 +1,18 @@
 Unicode true ; The Multi-Language-Part is a modified version of the MultiLanguage-NSIS-Example
 
+!define PRODUCT_VERSION "0.8.1.0"
+!define VERSION "0.8.1.0"
+
+VIProductVersion "${PRODUCT_VERSION}"
+VIFileVersion "${VERSION}"
+
+VIAddVersionKey "ProductName" "Portmaster"
+VIAddVersionKey "ProductVersion" "${PRODUCT_VERSION}"
+VIAddVersionKey "FileDescription" "Portmaster Application Firewall"
+VIAddVersionKey "FileVersion" "${VERSION}"
+VIAddVersionKey "CompanyName" "Safing ICS Technologies GmbH"
+VIAddVersionKey "LegalCopyright" "Safing ICS Technologies GmbH"
+
 !define MUI_ICON "portmaster.ico"
 !define MUI_UNICON "portmaster.ico"
 !define MUI_HEADERIMAGE
