@@ -22,7 +22,7 @@ installSystemdSupport() {
             systemctl daemon-reload ||:
         fi
 
-        log "Configuring portmaster.service to launch at boot"
+        log "info" "Configuring portmaster.service to launch at boot"
         systemctl enable portmaster.service ||:
     fi
 }

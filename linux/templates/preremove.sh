@@ -28,7 +28,7 @@ case "$action" in
       ;;
     *)
       # $1 == version being installed  
-      log "Alpine linux is not yet supported"
+      log "error" "Alpine linux is not yet supported"
       exit 1
       ;;
 esac

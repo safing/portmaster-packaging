@@ -14,10 +14,10 @@ rm /usr/bin/portmaster-control 2>/dev/null >&2 ||:
 #
 if [ -d /var/lib/portmaster ]; then
     if [ ! -d /opt/safing/portmaster/config.json ]; then
-        log "Migrating from previous installation at /var/lib/portmaster to /opt/safing/portmaster ..."
+        log "info" "Migrating from previous installation at /var/lib/portmaster to /opt/safing/portmaster ..."
         mv /var/lib/portmaster/databases /opt/safing/portmaster/databases ||:
         mv /var/lib/portmaster/config.json /opt/safing/portmaster/config.json ||:
     fi
-    log "Removing previous installation directory at /var/lib/portmaster"
+    log "info" "Removing previous installation directory at /var/lib/portmaster"
     rm -r /var/lib/portmaster 2>/dev/null >&2 ||:
 fi

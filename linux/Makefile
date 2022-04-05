@@ -4,7 +4,7 @@ NFPM ?= nfpm
 
 .PHONY: icons test-debian test-ubuntu  nfpm.yaml
 
-all: deb rpm
+all: deb rpm gen-pkgbuild gen-archive
 
 nfpm.yaml: portmaster-start
 	sed -e "s/^version:.*$$/version: v$(shell ./portmaster-start version --short)-$(shell cat ./pkgrev)/g" ./nfpm.yaml.template > ./nfpm.yaml
@@ -31,7 +31,7 @@ distdir:
 	mkdir -p ./dist
 
 clean:
-	rm -r ./portmaster-start ./scripts ./dist icons/ PKGBUILD arch.install nfpm.yaml src pkg  portmaster-bin-*.pkg.tar.xz|| true
+	rm -r ./portmaster-start ./scripts ./dist icons/ PKGBUILD arch.install nfpm.yaml src pkg  portmaster-bin-*.pkg.tar.xz archive.install || true
 
 test-debian: build deb
 	docker run -ti --rm -v $(shell pwd)/dist:/work -w /work debian:latest bash -c 'apt update && apt install -y ca-certificates && dpkg -i /work/portmaster*.deb ; bash'
@@ -54,6 +54,10 @@ gen-scripts:
 gen-pkgbuild: nfpm.yaml
 	gomplate -d "nfpm=./nfpm.yaml" -f templates/arch.install > arch.install
 	gomplate -d "nfpm=./nfpm.yaml" -f templates/PKGBUILD > PKGBUILD
+
+gen-archive: nfpm.yaml icons
+	gomplate -d "nfpm=./nfpm.yaml" -f templates/no-log-install.sh > archive.install
+	gomplate -d "nfpm=./nfpm.yaml" -f templates/create-archive.sh | bash
 
 lint:
 	shellcheck ./scripts/* ./arch.install 
