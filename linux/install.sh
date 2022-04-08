@@ -52,19 +52,25 @@ log() {
     if [[ ${colorize} == "yes" ]]; then
         case "$1" in
             info )
-                color="\u001b[37mℹ️ "
+                color="\u001b[37m- "
                 ;;
             warn )
-                color="\u001b[11m⚠️ "
+                color="\u001b[11m! "
                 ;;
             debug )
-                color="\u001b[36m   "
+                color="\u001b[36m  "
                 ;;
             success )
-                color="\u001b[32m✅ "
+                color="\u001b[32m* "
                 ;;
             error )
-                color="\u001b[31m❌ "
+                color="\u001b[31mx "
+                ;;
+            * )
+                # just in case someone called "log" without a level
+                # we need to make sure we dont' lose the message during "shift"
+                # below
+                color="$1 "
                 ;;
         esac
     else
@@ -159,10 +165,15 @@ copy_icons() {
     local failure=0
     for res in /opt/safing/portmaster/icons/* ; do
         cp $res/* /usr/share/icons/hicolor/$(basename $res) >/dev/null 2>&1 || failure=1
+
+        if [[ $failure -ne 0 ]]; then
+            break
+        fi
+        echo /usr/share/icons/hicolor/$(basename $res) >> /opt/safing/portmaster/.installed-files
     done
 
     if [[ $failure -ne 0 ]]; then
-        log warn "Failed to install portmaster icons to /usr/share/icons/hicolor"
+        log error "Failed to install portmaster icons to /usr/share/icons/hicolor"
         log debug "If you experience issues with Portmaster application icons try to copy them there manually."
         log debug "You can always find the current portmaster icons at /opt/safing/portmaster/icons"
     else
@@ -257,7 +268,7 @@ remove() {
     pre_remove "$1"
 
     # for the next steps we need to switch to the system root
-    cat /opt/safing/portmaster/.installed-files # | xargs rm -v
+    cat .installed-files | xargs rm -v 2>/dev/null >&2
     log success "Installed files deleted"
 
     log info "Running post-remove scripts ..."
