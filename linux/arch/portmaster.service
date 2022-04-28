@@ -16,7 +16,7 @@ LockPersonality=yes
 MemoryDenyWriteExecute=yes
 NoNewPrivileges=yes
 PrivateTmp=yes
-PIDFile=/opt/safing/portmaster/core-lock.pid
+PIDFile=/var/lib/portmaster/core-lock.pid
 Environment=LOGLEVEL=info
 Environment=PORTMASTER_ARGS=
 EnvironmentFile=-/etc/default/portmaster
@@ -37,8 +37,8 @@ CapabilityBoundingSet=cap_chown cap_kill cap_net_admin cap_net_bind_service cap_
 # SystemCallArchitectures=native
 # SystemCallFilter=@system-service @module
 # SystemCallErrorNumber=EPERM
-ExecStart=/opt/safing/portmaster/portmaster-start --data /opt/safing/portmaster core -- $PORTMASTER_ARGS
-ExecStopPost=-/opt/safing/portmaster/portmaster-start recover-iptables
+ExecStart=/usr/bin/portmaster-start --data /var/lib/portmaster core -- $PORTMASTER_ARGS
+ExecStopPost=-/usr/bin/portmaster-start recover-iptables
 
 [Install]
 WantedBy=multi-user.target
