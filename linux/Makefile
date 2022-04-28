@@ -9,7 +9,7 @@ all: deb rpm
 nfpm.yaml: portmaster-start
 	sed -e "s/^version:.*$$/version: v$(shell ./portmaster-start version --short)-$(shell cat ./pkgrev)/g" ./nfpm.yaml.template > ./nfpm.yaml
 
-build: icons nfpm.yaml gen-scripts gen-pkgbuild
+build: icons nfpm.yaml gen-scripts
 
 icons:
 	for res in 16 32 48 96 128 ; do \
@@ -50,10 +50,6 @@ gen-scripts:
 	for file in "rules" "preinstall.sh" "postinstall.sh" "preremove.sh" "postremove.sh"; do \
 		gomplate -f "templates/$${file}" > "./scripts/$${file}" ; \
 	done;
-
-gen-pkgbuild: nfpm.yaml
-	gomplate -d "nfpm=./nfpm.yaml" -f templates/arch.install > arch.install
-	gomplate -d "nfpm=./nfpm.yaml" -f templates/PKGBUILD > PKGBUILD
 
 lint:
 	shellcheck ./scripts/* ./arch.install 
