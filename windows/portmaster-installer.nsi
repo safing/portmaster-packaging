@@ -206,6 +206,8 @@ dontUpdate:
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 		"DisplayName" "Portmaster"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
+		"DisplayVersion" "${PRODUCT_VERSION}"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 		"UninstallString" "$\"$INSTDIR\portmaster-uninstaller.exe$\""
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Portmaster" \
 		"InstallLocation" "$\"$INSTDIR$\""
