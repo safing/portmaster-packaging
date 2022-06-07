@@ -17,6 +17,7 @@ ifeq (,$(findstring $(shell pwd),$(WINEPREFIX)))
 endif
 
 portmaster-start.exe:
+	echo Downloading portmaster-start.exe
 	curl --fail --user-agent GitHub -o portmaster-start.exe $(STARTURL)
 
 portmaster-uninstaller.exe: wine-setup portmaster-installer.nsi install_summary.nsh install_finish.nsh
