@@ -93,6 +93,7 @@ jobs:
 
       - name: Uninstall portmaster
         run: yes | sudo bash ./install.sh --uninstall
+        working-directory: linux
 
       - name: Verify uninstallation
         run: ./linux/tests/test-uninstall.sh
