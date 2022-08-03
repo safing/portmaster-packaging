@@ -17,7 +17,7 @@ jobs:
         with:
           ignore_paths: windows linux/templates linux/tests
 
-  build:9PsCS4iK3DqTBnE8nLq8dX3F7ajc
+  build:
     name: Build artifacts
     runs-on: ubuntu-latest
     steps:
