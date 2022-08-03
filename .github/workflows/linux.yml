@@ -72,7 +72,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
 
       - name: Install using SHELL installer
-        run: yes | sudo bash ./install.sh --assets-url file://./installer-assets-*.tar.gz
+        run: yes | sudo bash ./install.sh --assets-url file://$(echo $(pwd)/installer-assets-*.tar.gz)
         working-directory: linux
 
       - uses: actions/checkout@v2
@@ -85,7 +85,7 @@ jobs:
           path: linux/next
 
       - name: "Upgrade to next pkgrev"
-        run: yes | sudo bash ./install.sh --assets-url file://./next/installer-assets-*.tar.gz
+        run: yes | sudo bash ./install.sh --assets-url file://$(echo $(pwd)/next/installer-assets-*.tar.gz)
         working-directory: linux
 
       - name: Verify upgrade
