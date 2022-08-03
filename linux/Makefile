@@ -31,7 +31,7 @@ distdir:
 	mkdir -p ./dist
 
 clean:
-	rm -r ./portmaster-start ./scripts ./dist icons/ PKGBUILD arch.install nfpm.yaml src pkg  portmaster-bin-*.pkg.tar.xz archive.install || true
+	rm -r ./portmaster-start ./scripts ./dist icons/ PKGBUILD arch.install nfpm.yaml src pkg  portmaster-stub-bin-*.pkg.tar.xz archive.install || true
 
 test-debian: build deb
 	docker run -ti --rm -v $(shell pwd)/dist:/work -w /work debian:latest bash -c 'apt update && apt install -y ca-certificates && dpkg -i /work/portmaster*.deb ; bash'

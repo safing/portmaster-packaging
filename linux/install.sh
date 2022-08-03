@@ -246,6 +246,7 @@ install_or_upgrade() {
     rm -rf "${tmp_dir}"
 
     log success "Portmaster is now installed."
+    log success "Please restart your device to start Portmaster"
     exit 0
 }
 

@@ -4,7 +4,7 @@
 #
 {{ strings.Indent 1 "# " $nfpm.description -}}
 #
-pkgname=portmaster-bin
+pkgname=portmaster-stub-bin
 pkgver={{ index ($nfpm.version | strings.TrimPrefix "v" | strings.SplitN "-" 2) 0 }}
 pkgrel={{ index ($nfpm.version | strings.SplitN "-" 2) 1 }}
 pkgdesc='Application Firewall: Block Mass Surveillance - Love Freedom'
