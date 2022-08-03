@@ -17,7 +17,7 @@ jobs:
         with:
           ignore_paths: windows linux/templates linux/tests
 
-  build:
+  build:9PsCS4iK3DqTBnE8nLq8dX3F7ajc
     name: Build artifacts
     runs-on: ubuntu-latest
     steps:
@@ -72,7 +72,7 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
 
       - name: Install using SHELL installer
-        run: yes | sudo bash ./install.sh --assets-url ./installer-assets-*.tar.gz
+        run: yes | sudo bash ./install.sh --assets-url file://./installer-assets-*.tar.gz
         working-directory: linux
 
       - uses: actions/checkout@v2
@@ -85,7 +85,7 @@ jobs:
           path: linux/next
 
       - name: "Upgrade to next pkgrev"
-        run: yes | sudo bash ./install.sh --assets-url ./next/installer-assets-*.tar.gz
+        run: yes | sudo bash ./install.sh --assets-url file://./next/installer-assets-*.tar.gz
         working-directory: linux
 
       - name: Verify upgrade
@@ -209,7 +209,6 @@ jobs:
           - fedora:33
           - fedora:34
           - centos:7
-          - centos:8
     container: ${{ matrix.container }}
     steps:
       - uses: actions/download-artifact@v2
