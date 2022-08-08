@@ -1,0 +1,35 @@
+name: release-aur
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  release-to-aur:
+    name: Release to AUR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install nfpm@latest
+        run: curl -o /tmp/nfpm.tar.gz -sSL https://github.com/goreleaser/nfpm/releases/download/v2.7.1/nfpm_2.7.1_Linux_x86_64.tar.gz && cd /tmp && tar xf /tmp/nfpm.tar.gz && sudo mv nfpm /usr/local/bin && sudo chmod a+x /usr/local/bin/nfpm
+
+      - name: Install gomplate
+        run: sudo curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.10.0/gomplate_linux-amd64 && sudo chmod +x /usr/local/bin/gomplate
+
+      - name: Build packages
+        run: make gen-pkgbuild
+        working-directory: linux
+
+      - name: Prepare SSH config
+        uses: MrSquaare/ssh-setup-action@v1
+        with:
+          host: aur.archlinux.org
+          private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Run AUR release process
+        run: ./release_to_aur.sh
+        working-directory: linux
+        env:
+          GITHUB_COMMIT_MESSAGE: "${{ github.event.head_commit.message }}"

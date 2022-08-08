@@ -79,7 +79,7 @@ log() {
 
     shift
 
-    echo -e "${color}$@\u001b[0m"
+    echo -e "${color}$*\u001b[0m"
 }
 
 header() {
@@ -99,7 +99,7 @@ you share and what data stays private. Read more on docs.safing.io.\u001b[0m"
 }
 
 check_bin() {
-    command -V $1 >/dev/null 2>&1
+    command -V "$1" >/dev/null 2>&1
     result=$?
 
     if [[ $result -ne 0 ]]; then
@@ -164,12 +164,12 @@ download_pmstart() {
 copy_icons() {
     local failure=0
     for res in /opt/safing/portmaster/icons/* ; do
-        cp $res/* /usr/share/icons/hicolor/$(basename $res) >/dev/null 2>&1 || failure=1
+        cp $res/* "/usr/share/icons/hicolor/$(basename $res)" >/dev/null 2>&1 || failure=1
 
         if [[ $failure -ne 0 ]]; then
             break
         fi
-        echo /usr/share/icons/hicolor/$(basename $res) >> /opt/safing/portmaster/.installed-files
+        echo "/usr/share/icons/hicolor/$(basename $res)" >> /opt/safing/portmaster/.installed-files
     done
 
     if [[ $failure -ne 0 ]]; then
@@ -238,12 +238,17 @@ install_or_upgrade() {
         log debug "If you don't want to download modules abort the installer and re-run with"
         log debug "--no-download --no-upgrade"
 
+        # skip_downloads is used in post_install which is sourced from .INSTALL.sh
+        # so we need to export it here.
+        export skip_downloads
         post_install
     fi
 
     log info "Cleaning up temporary directory"
     # Remove the temporary directory
-    rm -rf "${tmp_dir}"
+    if [[ "$remove_tmp" != "no" ]]; then
+        rm -rf "${tmp_dir}"
+    fi
 
     log success "Portmaster is now installed."
     log success "Please restart your device to start Portmaster"
