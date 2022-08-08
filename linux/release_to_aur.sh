@@ -1,7 +1,7 @@
 #!/bin/bash
 source tests/common.sh
 
-if [ -d ./dist ]; then
+if [ ! -e ./PKGBUILD ]; then
     error 'Run `make gen-pkgbuild` first'
     exit 1
 fi
@@ -12,6 +12,11 @@ if [ -z $GITHUB_COMMIT_MESSAGE ]; then
 fi
 
 set -e
+
+group "Configuring git"
+    git config user.name "Safing"
+    git config user.email "noc@safing.io"
+endgroup
 
 target="/tmp/portmaster-stub-bin"
 
@@ -37,9 +42,9 @@ if [[ `git status --porcelain` ]]; then
 
     group "Commiting and pushing to AUR"
         git add .
-        git commit -m "${GITHUB_COMMIT_MESSAGE}"
-        # git push
+        git commit --author "Safing <noc@safing.io>" -m "${GITHUB_COMMIT_MESSAGE}" --no-gpg-sign
         git log
+        git push
     endgroup
 else
    info "No changes detected, aborting" 
