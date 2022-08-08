@@ -16,8 +16,7 @@ set -e
 target="/tmp/portmaster-stub-bin"
 
 group "Cloning AUR repository to /tmp/portmaster-stub-bin"
-    git init "${target}"
-    # git clone ssh://aur@aur.archlinux.org/portmaster-stub-bin.git "${target}"
+    git clone ssh://aur@aur.archlinux.org/portmaster-stub-bin.git "${target}"
 endgroup
 
 group "Copying files to AUR repository"
@@ -28,16 +27,19 @@ group "Copying files to AUR repository"
     done
 endgroup
 
-group "Generating .SRCINFO"
-    docker run --rm -v "$(pwd):/workspace" -w /workspace -u 1000 archlinux:latest makepkg --printsrcinfo > "${target}/.SRCINFO"
-endgroup
-
 cd "${target}"
 if [[ `git status --porcelain` ]]; then
+    # we only generate a new .SRCINFO file if we have actual changes to the AUR repo
+    # that we want to publish.
+    group "Generating .SRCINFO"
+        docker run --rm -v "$(pwd):/workspace" -w /workspace -u 1000 archlinux:latest makepkg --printsrcinfo > "${target}/.SRCINFO"
+    endgroup
+
     group "Commiting and pushing to AUR"
         git add .
         git commit -m "${GITHUB_COMMIT_MESSAGE}"
-        git push
+        # git push
+        git log
     endgroup
 else
    info "No changes detected, aborting" 
