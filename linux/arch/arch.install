@@ -1,0 +1,6 @@
+post_install() {
+    #
+    # Prepare the installation directory tree
+    #
+    portmaster-start --data /var/lib/portmaster clean-structure
+}

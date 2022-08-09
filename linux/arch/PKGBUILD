@@ -1,0 +1,89 @@
+# Maintainer: Safing ICS Technologies <noc@safing.io>
+# Contributor: James Callahan <james+archlinux@wavesquid.com>
+#
+# Application Firewall: Block Mass Surveillance - Love Freedom
+# The Portmaster enables you to protect your data on your device. You
+# are back in charge of your outgoing connections: you choose what data
+# you share and what data stays private. Read more on docs.safing.io.
+#
+pkgname=portmaster
+pkgver=0.8.5
+pkgrel=1
+pkgdesc='Application Firewall: Block Mass Surveillance - Love Freedom'
+arch=('x86_64')
+url='https://safing.io/portmaster'
+license=('AGPL3')
+depends=('libnetfilter_queue')
+makedepends=('imagemagick') # for convert
+optdepends=('libappindicator-gtk3: for systray indicator')
+options=('!lto')
+install=arch.install
+source=("https://github.com/safing/portmaster/archive/refs/tags/v${pkgver}.tar.gz"
+		'portmaster.desktop'
+		'portmaster_notifier.desktop'
+		'portmaster_logo.png'
+		"portmaster.service")
+noextract=('portmaster-start')
+sha256sums=('3a504033aacd63f65fda1a15d1b2d354f7083b1025b991c228e66d31089ce7c1'
+            'a226e5b69e1086affb1aa205d54d7853eb3dbfd4336dc0f494873746f11ae5f0'
+            'fcd9adf46b3f258456b414e7013ead77290d2a49b82bc5ff25ef1fd1cf40286a'
+            'ecb02625952594af86d3b53762363c1e227c2b9604fc9c9423682fc87a92a957'
+            '8b9c98ce48a899ab1709359f11700095eb2a8d38513733329cd78644cf22a12b')
+
+prepare() {
+  cd "portmaster-$pkgver"
+
+  go mod download
+}
+
+build() {
+  for res in 16 32 48 96 128 ; do
+    local iconpath="icons/${res}x${res}/"
+    mkdir -p "${iconpath}"
+    convert ./portmaster_logo.png -resize "${res}x${res}" "${iconpath}/portmaster.png"
+  done
+
+  cd "portmaster-$pkgver"
+
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOPROXY=off
+  go build -o portmaster-start \
+    -trimpath \
+    -buildmode=pie \
+    -mod=readonly \
+    -modcacherw \
+    -ldflags "-X github.com/safing/portbase/info.commit= \
+              -X github.com/safing/portbase/info.buildOptions= \
+              -X github.com/safing/portbase/info.buildUser= \
+              -X github.com/safing/portbase/info.buildHost= \
+              -X github.com/safing/portbase/info.buildDate=$(date -u +'%Y-%m-%dT%H:%M:%SZ' --date=@${SOURCE_DATE_EPOCH}) \
+              -X github.com/safing/portbase/info.buildSource=https://github.com/safing/portmaster \
+              -linkmode=external \
+              -extldflags \"${LDFLAGS}\"" \
+    ./cmds/portmaster-start
+  # https://github.com/safing/portmaster/issues/630
+  #./portmaster-start completion bash > portmaster-start.bash
+  #./portmaster-start completion fish > portmaster-start.fish
+  #./portmaster-start completion zsh > portmaster-start.zsh
+}
+
+package() {
+  install -Dm644 "portmaster.desktop" "${pkgdir}/usr/share/applications/portmaster.desktop"
+  install -Dm644 "portmaster_notifier.desktop" "${pkgdir}/usr/share/applications/portmaster_notifier.desktop"
+  install -Dm644 "portmaster.service" "${pkgdir}/usr/lib/systemd/system/portmaster.service"
+  install -Dm644 "icons/32x32/portmaster.png" "${pkgdir}/usr/share/pixmaps/portmaster.png"
+  install -Dm644 "icons/16x16/portmaster.png" "${pkgdir}/usr/share/icons/hicolor/16x16/apps/portmaster.png"
+  install -Dm644 "icons/32x32/portmaster.png" "${pkgdir}/usr/share/icons/hicolor/32x32/apps/portmaster.png"
+  install -Dm644 "icons/48x48/portmaster.png" "${pkgdir}/usr/share/icons/hicolor/48x48/apps/portmaster.png"
+  install -Dm644 "icons/96x96/portmaster.png" "${pkgdir}/usr/share/icons/hicolor/96x96/apps/portmaster.png"
+  install -Dm644 "icons/128x128/portmaster.png" "${pkgdir}/usr/share/icons/hicolor/128x128/apps/portmaster.png"
+  cd "portmaster-$pkgver"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm755 portmaster-start "${pkgdir}/usr/bin/portmaster-start"
+  #install -Dm644 portmaster-start.bash "$pkgdir/usr/share/bash-completion/completions/portmaster-start"
+  #install -Dm644 portmaster-start.fish "$pkgdir/usr/share/fish/vendor_completions.d/portmaster-start.fish"
+  #install -Dm644 portmaster-start.zsh "$pkgdir/usr/share/zsh/site-functions/_portmaster-start"
+}
