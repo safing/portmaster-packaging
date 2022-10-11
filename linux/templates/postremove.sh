@@ -23,16 +23,16 @@ fi
 
 case "$action" in
     "0" | "uninstall" | "purge")
-      log "post remove of complete uninstall"
+      log "debug" "post remove of complete uninstall"
       uninstall "$action"
       ;;
     "1" | "upgrade")
-      log "post remove of upgrade"
+      log "debug" "post remove of upgrade"
       ;;
     *)
       # $1 == version being installed  
-      log "post remove of alpine"
-      log "Alpine linux is not yet supported"
+      log "debug" "post remove of alpine"
+      log "debug" "Alpine linux is not yet supported"
       exit 1
       ;;
 esac

@@ -10,7 +10,8 @@ installSystemdSupport() {
         # not all distros have migrated /lib to /usr/lib yet but all that
         # have provide a symlink from /lib -> /usr/lib so we just prefix with
         # /lib here.
-        ln -s /opt/safing/portmaster/portmaster.service /lib/systemd/system/portmaster.service 2>/dev/null >&2 ||:
+        ln -s /opt/safing/portmaster/portmaster.service /lib/systemd/system/portmaster.service 2>/dev/null >&2 || 
+            log error "Failed to install systemd unit file. Please copy /opt/safing/portmaster/portmaster.service to /etc/systemd/system manually"
 
         # rhel/centos8 does not yet have ProtectKernelLogs available
         if [ "${systemd_version}" -lt 244 ]; then
@@ -22,7 +23,7 @@ installSystemdSupport() {
             systemctl daemon-reload ||:
         fi
 
-        log "Configuring portmaster.service to launch at boot"
+        log "info" "Configuring portmaster.service to launch at boot"
         systemctl enable portmaster.service ||:
     fi
 }

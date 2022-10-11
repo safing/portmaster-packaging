@@ -49,6 +49,55 @@ jobs:
           name: portmaster-next
           path: linux/dist/*
 
+  test-shell-install:
+    name: Test curl|bash installer
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: portmaster-current
+          path: linux
+
+      - name: Install tooling
+        run: sudo bash -c "apt-get update && apt-get install -y systemd desktop-file-utils"
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Install dependencies
+        run: sudo apt-get install -y libnetfilter-queue1 ca-certificates
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Install using SHELL installer
+        run: yes | sudo bash ./install.sh --assets-url file://$(echo $(pwd)/installer-assets-*.tar.gz)
+        working-directory: linux
+
+      - uses: actions/checkout@v2
+      - name: Verify installation
+        run: ./linux/tests/test-install.sh
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: portmaster-next
+          path: linux/next
+
+      - name: "Upgrade to next pkgrev"
+        run: yes | sudo bash ./install.sh --assets-url file://$(echo $(pwd)/next/installer-assets-*.tar.gz)
+        working-directory: linux
+
+      - name: Verify upgrade
+        run: ./linux/tests/test-upgrade.sh
+
+      - name: Uninstall portmaster
+        run: yes | sudo bash ./install.sh --uninstall
+        working-directory: linux
+
+      - name: Verify uninstallation
+        run: ./linux/tests/test-uninstall.sh
+
   test-ubuntu:
     name: Test DEB package (ubuntu VM)
     runs-on: ubuntu-latest
@@ -161,7 +210,6 @@ jobs:
           - fedora:33
           - fedora:34
           - centos:7
-          - centos:8
     container: ${{ matrix.container }}
     steps:
       - uses: actions/download-artifact@v2

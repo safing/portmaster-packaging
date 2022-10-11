@@ -5,24 +5,4 @@
     }
 {{- end -}}
 
-post_install() {
-    {{ template "log" }}
-{{ file.Read "templates/snippets/install-systemd-utils.sh" | strings.Indent 4 " " }}
-{{ file.Read "templates/snippets/post-install.sh" | strings.Indent 4 " " }}
-}
-
-post_upgrade() {
-    {{ template "log" }}
-{{ file.Read "templates/snippets/install-systemd-utils.sh" | strings.Indent 4 " " }}
-{{ file.Read "templates/snippets/post-upgrade.sh" | strings.Indent 4 " " }}
-}
-
-pre_remove() {
-    {{ template "log" }}
-{{ file.Read "templates/snippets/pre-remove.sh" | strings.Indent 4 " " }}
-}
-
-post_remove() {
-    {{ template "log" }}
-{{ file.Read "templates/snippets/post-remove.sh" | strings.Indent 4 " " }}
-}
+{{ file.Read "templates/arch-base.install" | tmpl.Inline }}
