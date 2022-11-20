@@ -1,7 +1,7 @@
 Unicode true ; The Multi-Language-Part is a modified version of the MultiLanguage-NSIS-Example
 
-!define PRODUCT_VERSION "0.8.8.1"
-!define VERSION "0.8.8.1"
+!define PRODUCT_VERSION "1.0.0"
+!define VERSION "1.0.0"
 
 VIProductVersion "${PRODUCT_VERSION}"
 VIFileVersion "${VERSION}"
