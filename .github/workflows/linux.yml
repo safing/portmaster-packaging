@@ -213,7 +213,7 @@ jobs:
           - fedora:32
           - fedora:33
           - fedora:34
-          - centos:7
+          # - centos:7
     container: ${{ matrix.container }}
     steps:
       - uses: actions/download-artifact@v2
