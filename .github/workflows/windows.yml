@@ -2,9 +2,9 @@ name: Windows
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
   build-nsis:
@@ -19,4 +19,3 @@ jobs:
         with:
           name: ${{ steps.build.outputs.filename }}
           path: ${{ steps.build.outputs.filename }}
-
