@@ -75,9 +75,6 @@ overrides:
       - libappindicator3-1
       # - gir1.2-harfbuzz-0.0
   rpm:
-    # depends:
-    #   - glibc-devel
-    #   - libnetfilter_queue
     recommends:
       - libappindicator
     suggests:

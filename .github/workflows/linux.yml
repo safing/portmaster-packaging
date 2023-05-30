@@ -79,7 +79,6 @@ jobs:
         run: yes | sudo bash ./install.sh --assets-url file://$(echo $(pwd)/installer-assets-*.tar.gz)
         working-directory: linux
 
-      - uses: actions/checkout@v2
       - name: Verify installation
         run: ./linux/tests/test-install.sh
 
