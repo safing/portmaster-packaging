@@ -29,7 +29,7 @@ group "Systemd Integration"
     if ! [ "${VERSION}" = "19 (Tara)" ] || is_systemd_running ; then # Skip systemd tests on Mint19 ...
         debug "Use systemd-analyze to verify portmaster.service"
 
-        ls -lah /etc/systemd/system/portmaster.service
+        ls -lah /etc/systemd/system/portmaster.service /opt/safing/portmaster/portmaster.service
 
         if ! systemd-analyze verify portmaster.service ; then
             error "systemd-analyze returned an error for portmaster.service"
