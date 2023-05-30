@@ -1,5 +1,5 @@
 #!/bin/bash
-TEMP=`getopt -u -o uhd:t: -l no-color,no-download,purge,uninstall,no-upgrade,debug,help,assets-url:,start-url:,arch:,tmp-dir: -n 'portmaster-installer' -- "$@"`
+TEMP=$(getopt -u -o uhd:t: -l no-color,no-download,purge,uninstall,no-upgrade,debug,help,assets-url:,start-url:,arch:,tmp-dir: -n 'portmaster-installer' -- "$@")
 eval set -- "$TEMP"
 
 if [[ $? -ne 0 ]]; then
