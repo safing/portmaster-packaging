@@ -40,7 +40,7 @@ cp archive.install "${pkgdir}/.INSTALL.sh"
 
 # Create filelist to support easy uninstallation
 # like doing a `cat /opt/safing/portmaster/.installed-files | sudo xargs rm`
-( cd ${pkgdir} && find . -type f ) >> ${pkgdir}/.installed-files
+( cd ${pkgdir} && find . -type f ) > ${pkgdir}/.installed-files
 
 # Create archive
 ( cd ${pkgdir} && tar cfz ../installer-assets-{{ $nfpm.version }}.tar.gz . )
