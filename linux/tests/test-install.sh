@@ -3,6 +3,10 @@
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 . ${SCRIPT_DIR}/common.sh
 
+group "Directory Permissions"
+    ls -lah /opt/safing/portmaster
+endgroup
+
 #
 # Perform our tests
 #
@@ -28,8 +32,6 @@ group "Systemd Integration"
     #
     if ! [ "${VERSION}" = "19 (Tara)" ] || is_systemd_running ; then # Skip systemd tests on Mint19 ...
         debug "Use systemd-analyze to verify portmaster.service"
-
-        ls -lah /etc/systemd/system/portmaster.service /opt/safing/portmaster/portmaster.service
 
         if ! systemd-analyze verify portmaster.service ; then
             error "systemd-analyze returned an error for portmaster.service"
