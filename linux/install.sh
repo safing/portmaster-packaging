@@ -1,5 +1,6 @@
 #!/bin/bash
-set -- "$(getopt -u -o uhd:t: -l no-color,no-download,purge,uninstall,no-upgrade,debug,help,assets-url:,start-url:,arch:,tmp-dir: -n 'portmaster-installer' -- "$@")"
+TEMP=`getopt -u -o uhd:t: -l no-color,no-download,purge,uninstall,no-upgrade,debug,help,assets-url:,start-url:,arch:,tmp-dir: -n 'portmaster-installer' -- "$@"`
+eval set -- "$TEMP"
 
 if [[ $? -ne 0 ]]; then
     exit 1
@@ -293,56 +294,56 @@ fi
 
 while true; do 
     case "$1" in
-        --debug )
+        --debug)
             set -x
             shift
             ;;
-        --assets-url )
+        --assets-url)
             asset_url="$2"
             shift 2
             ;;
-        --start-url )
+        --start-url)
             start_url="$2"
             shift 2
             ;;
-        --arch )
+        --arch)
             arch="$2"
             shift 2
             ;;
-        -t | --tmp-dir )
+        -t|--tmp-dir)
             tmp_dir="$2"
             remove_tmp="no"
             shift 2
             ;;
-        -h | --help )
+        -h|--help)
             print_help
             exit 0
             ;;
-        --no-upgrade )
+        --no-upgrade)
             upgrade="no"
             shift
             ;;
-        -u | --uninstall )
+        -u|--uninstall)
             action="uninstall"
             shift
             ;;
-        --purge )
+        --purge)
             action="purge"
             shift
             ;;
-        --no-download )
+        --no-download)
             skip_downloads="True"
             shift
             ;;
-        --no-color )
+        --no-color)
             colorize="no"
             shift
             ;;
-        -- )
+        --)
             shift
             break
             ;;
-        * )
+        *)
             break
             ;;
     esac
