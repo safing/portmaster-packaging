@@ -215,6 +215,9 @@ install_or_upgrade() {
     # Untar the archive on root
     log info "Extracting assets to /opt/safing/portmaster"
     tar --extract --no-same-owner --no-overwrite-dir -m --file="${assets}"
+    log info "Fixing asset permissions"
+    chmod -R a+r /opt/safing/portmaster
+
     cp "${pmstart}" /opt/safing/portmaster/portmaster-start
     chmod 0755 /opt/safing/portmaster/portmaster-start
 
