@@ -1,5 +1,6 @@
 #!/bin/bash
-set -- $(getopt -u -o uhd:t: -l no-color,no-download,purge,uninstall,no-upgrade,debug,help,assets-url:,start-url:,arch:,tmp-dir: -n 'portmaster-installer' -- "$@")
+TEMP=$(getopt -u -o uhd:t: -l no-color,no-download,purge,uninstall,no-upgrade,debug,help,assets-url:,start-url:,arch:,tmp-dir: -n 'portmaster-installer' -- "$@")
+eval set -- "$TEMP"
 
 if [[ $? -ne 0 ]]; then
     exit 1
@@ -164,12 +165,12 @@ download_pmstart() {
 copy_icons() {
     local failure=0
     for res in /opt/safing/portmaster/icons/* ; do
-        cp $res/* "/usr/share/icons/hicolor/$(basename $res)" >/dev/null 2>&1 || failure=1
+        cp "$res"/* "/usr/share/icons/hicolor/$(basename "$res")" >/dev/null 2>&1 || failure=1
 
         if [[ $failure -ne 0 ]]; then
             break
         fi
-        echo "/usr/share/icons/hicolor/$(basename $res)" >> /opt/safing/portmaster/.installed-files
+        echo "/usr/share/icons/hicolor/$(basename "$res")" >> /opt/safing/portmaster/.installed-files
     done
 
     if [[ $failure -ne 0 ]]; then
@@ -201,8 +202,8 @@ install_or_upgrade() {
     assets="${tmp_dir}/assets.tar.gz"
     pmstart="${tmp_dir}/portmaster-start"
 
-    download_assets $assets
-    download_pmstart $pmstart
+    download_assets "$assets"
+    download_pmstart "$pmstart"
 
     if [[ "${upgrade}" != "yes" ]]; then
         log info "Creating /opt/safing/portmaster"
@@ -214,8 +215,11 @@ install_or_upgrade() {
 
     # Untar the archive on root
     log info "Extracting assets to /opt/safing/portmaster"
-    tar --extract --no-same-owner --no-same-permissions --no-overwrite-dir -m --file="${assets}"
-    cp ${pmstart} /opt/safing/portmaster/portmaster-start
+    tar --extract --no-same-owner --no-overwrite-dir -m --file="${assets}"
+    log info "Fixing asset permissions"
+    chmod -R a+r /opt/safing/portmaster
+
+    cp "${pmstart}" /opt/safing/portmaster/portmaster-start
     chmod 0755 /opt/safing/portmaster/portmaster-start
 
     log success "Extracted assets to /opt/safing/portmaster"
@@ -274,7 +278,7 @@ remove() {
     pre_remove "$1"
 
     # for the next steps we need to switch to the system root
-    cat .installed-files | xargs rm -v 2>/dev/null >&2
+    xargs rm -v 2>/dev/null >&2 <.installed-files
     log success "Installed files deleted"
 
     log info "Running post-remove scripts ..."
@@ -290,56 +294,56 @@ fi
 
 while true; do 
     case "$1" in
-        --debug )
+        --debug)
             set -x
             shift
             ;;
-        --assets-url )
+        --assets-url)
             asset_url="$2"
             shift 2
             ;;
-        --start-url )
+        --start-url)
             start_url="$2"
             shift 2
             ;;
-        --arch )
+        --arch)
             arch="$2"
             shift 2
             ;;
-        -t | --tmp-dir )
+        -t|--tmp-dir)
             tmp_dir="$2"
             remove_tmp="no"
             shift 2
             ;;
-        -h | --help )
+        -h|--help)
             print_help
             exit 0
             ;;
-        --no-upgrade )
+        --no-upgrade)
             upgrade="no"
             shift
             ;;
-        -u | --uninstall )
+        -u|--uninstall)
             action="uninstall"
             shift
             ;;
-        --purge )
+        --purge)
             action="purge"
             shift
             ;;
-        --no-download )
+        --no-download)
             skip_downloads="True"
             shift
             ;;
-        --no-color )
+        --no-color)
             colorize="no"
             shift
             ;;
-        -- )
+        --)
             shift
             break
             ;;
-        * )
+        *)
             break
             ;;
     esac

@@ -2,11 +2,11 @@
 source tests/common.sh
 
 if [ ! -e ./PKGBUILD ]; then
-    error 'Run `make gen-pkgbuild` first'
+    error "Run first: make gen-pkgbuild"
     exit 1
 fi
 
-if [ -z $GITHUB_COMMIT_MESSAGE ]; then
+if [ -z "$GITHUB_COMMIT_MESSAGE" ]; then
     error "No commit message defined in GITHUB_COMMIT_MESSAGE"
     exit 1
 fi
@@ -33,7 +33,7 @@ group "Copying files to AUR repository"
 endgroup
 
 cd "${target}"
-if [[ `git status --porcelain` ]]; then
+if [[ $(git status --porcelain) ]]; then
     # we only generate a new .SRCINFO file if we have actual changes to the AUR repo
     # that we want to publish.
     group "Generating .SRCINFO"
