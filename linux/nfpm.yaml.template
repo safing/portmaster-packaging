@@ -70,6 +70,7 @@ overrides:
   deb:
     depends:
       - iptables
+      - ca-certificates
     #   - libc6
     #   - libnetfilter-queue1
     recommends:
