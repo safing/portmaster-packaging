@@ -12,10 +12,12 @@ nfpm.yaml: portmaster-start
 build: icons nfpm.yaml gen-scripts gen-pkgbuild
 
 icons:
-	for res in 16 32 48 96 128 ; do \
+	for res in 16 22 24 32 48 64 96 128 256 ; do \
 		mkdir -p icons/$${res}x$${res} ; \
 		convert ./portmaster_logo.png -resize "$${res}x$${res}" "icons/$${res}x$${res}/portmaster.png" ; \
 	done
+	mkdir -p icons/symbolic/apps
+	cp ./portmaster_logo.svg icons/symbolic/apps/portmaster-symbolic.svg
 
 portmaster-start:
 	curl --fail --user-agent GitHub -o portmaster-start $(STARTURL)
