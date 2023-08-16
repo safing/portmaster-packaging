@@ -68,7 +68,9 @@ scripts:
 
 overrides:
   deb:
-    # depends: 
+    depends:
+      - iptables
+      - ca-certificates
     #   - libc6
     #   - libnetfilter-queue1
     recommends:
