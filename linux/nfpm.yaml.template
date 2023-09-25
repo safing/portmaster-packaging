@@ -48,18 +48,28 @@ contents:
 #
 # Icons
 #
-- src: icons/32x32/portmaster.png 
+- src: icons/32x32/portmaster.png
   dst: /usr/share/pixmaps/portmaster.png
-- src: icons/16x16/portmaster.png 
+- src: icons/16x16/portmaster.png
   dst: /usr/share/icons/hicolor/16x16/apps/portmaster.png
-- src: icons/32x32/portmaster.png 
+- src: icons/22x22/portmaster.png
+  dst: /usr/share/icons/hicolor/22x22/apps/portmaster.png
+- src: icons/24x24/portmaster.png
+  dst: /usr/share/icons/hicolor/24x24/apps/portmaster.png
+- src: icons/32x32/portmaster.png
   dst: /usr/share/icons/hicolor/32x32/apps/portmaster.png
-- src: icons/48x48/portmaster.png 
+- src: icons/48x48/portmaster.png
   dst: /usr/share/icons/hicolor/48x48/apps/portmaster.png
-- src: icons/96x96/portmaster.png 
+- src: icons/64x64/portmaster.png
+  dst: /usr/share/icons/hicolor/64x64/apps/portmaster.png
+- src: icons/96x96/portmaster.png
   dst: /usr/share/icons/hicolor/96x96/apps/portmaster.png
 - src: icons/128x128/portmaster.png
   dst: /usr/share/icons/hicolor/128x128/apps/portmaster.png
+- src: icons/256x256/portmaster.png
+  dst: /usr/share/icons/hicolor/256x256/apps/portmaster.png
+- src: icons/symbolic/apps/portmaster-symbolic.svg
+  dst: /usr/share/icons/hicolor/symbolic/apps/portmaster-symbolic.svg
 scripts:
   preinstall: ./scripts/preinstall.sh
   postinstall: ./scripts/postinstall.sh
