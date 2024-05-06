@@ -14,6 +14,7 @@ Restart=on-failure
 RestartSec=10
 LockPersonality=yes
 MemoryDenyWriteExecute=yes
+MemoryLow=2G
 NoNewPrivileges=yes
 PrivateTmp=yes
 PIDFile=/opt/safing/portmaster/core-lock.pid
