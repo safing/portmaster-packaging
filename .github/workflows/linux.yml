@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: portmaster-current
           path: linux
@@ -82,7 +82,7 @@ jobs:
       - name: Verify installation
         run: ./linux/tests/test-install.sh
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: portmaster-next
           path: linux/next
@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: portmaster-current
           path: linux
@@ -128,7 +128,7 @@ jobs:
       - name: Verify installation
         run: ./linux/tests/test-install.sh
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: portmaster-next
           path: linux/next
@@ -163,7 +163,7 @@ jobs:
           - linuxmintd/mint19-amd64
     needs: build
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: portmaster-current
           path: linux
@@ -185,7 +185,7 @@ jobs:
       - name: Verify installation
         run: sudo ./linux/tests/test-install.sh
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: portmaster-next
           path: ./linux/next
@@ -215,7 +215,7 @@ jobs:
           # - centos:7
     container: ${{ matrix.container }}
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: portmaster-current
           path: linux
@@ -233,7 +233,7 @@ jobs:
       - name: Verify installation
         run: ./linux/tests/test-install.sh
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: portmaster-next
           path: ./linux/next
